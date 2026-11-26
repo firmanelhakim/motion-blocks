@@ -155,12 +155,15 @@ jobs:
             -c:v copy -c:a aac -b:a 192k no_friction-actions.mp4
       - name: Verify the stitched video
         run: |
+          # NB: -of csv=p=0 appends a trailing comma when the video stream
+          # carries ICC side data (JPEG stills embed ICC profiles) — the
+          # default= writer with cut is immune (run 5 failed on "1434,").
           frames=$(ffprobe -v error -count_frames -select_streams v:0 \
-            -show_entries stream=nb_read_frames -of csv=p=0 no_friction-actions.mp4)
+            -show_entries stream=nb_read_frames -of default=noprint_wrappers=1 no_friction-actions.mp4 | cut -d= -f2)
           duration=$(ffprobe -v error -show_entries format=duration \
-            -of csv=p=0 no_friction-actions.mp4)
+            -of default=noprint_wrappers=1 no_friction-actions.mp4 | cut -d= -f2)
           audio=$(ffprobe -v error -select_streams a:0 \
-            -show_entries stream=codec_type -of csv=p=0 no_friction-actions.mp4)
+            -show_entries stream=codec_type -of default=noprint_wrappers=1 no_friction-actions.mp4 | cut -d= -f2)
           echo "frames=$frames duration=$duration audio=$audio"
           test "$frames" = "1434" || { echo "FAIL: expected 1434 frames, got $frames"; exit 1; }
           test "$audio" = "audio" || { echo "FAIL: no audio stream"; exit 1; }
