@@ -173,7 +173,7 @@ export interface SceneSegment {
   characters: Partial<Record<CharacterId, CharacterKeyframe[]>>;
 }
 
-export interface RobloxShortStory {
+export interface MotionBlocksStory {
   title: string;
   fps: number;
   durationInFrames: number;

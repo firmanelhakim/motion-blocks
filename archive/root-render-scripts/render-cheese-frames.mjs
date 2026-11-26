@@ -1,4 +1,4 @@
-// Render specific RobloxShort frames from existing out/bundle (backward-compatible shim).
+// Render specific MotionBlocks frames from existing out/bundle (backward-compatible shim).
 // Usage: node render-cheese-frames.mjs <outDir> <f1> <f2> ...
 import path from 'node:path';
 import { buildRenderOptions, getServeUrl, renderStillBatch } from './scripts/render_lib.mjs';
@@ -13,7 +13,7 @@ const opts = buildRenderOptions();
 const serveUrl = await getServeUrl({ bundleDir: 'out/bundle' });
 const items = frames.map((f) => {
   const frame = Number(f);
-  return { id: 'RobloxShort', frame, output: path.join(outDir, `frame-${frame}.png`) };
+  return { id: 'MotionBlocks', frame, output: path.join(outDir, `frame-${frame}.png`) };
 });
 await renderStillBatch({
   serveUrl,

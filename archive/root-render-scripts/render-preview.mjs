@@ -1,4 +1,4 @@
-// Render RobloxShort preview stills for one story (backward-compatible shim).
+// Render MotionBlocks preview stills for one story (backward-compatible shim).
 // Usage: node render-preview.mjs <slug>
 // Reads frame list from /tmp/preview-frames-<slug>.json
 // Writes out/preview/<slug>/frame-<NNNN>.png
@@ -16,7 +16,7 @@ const outDir = path.resolve(`out/preview/${slug}`);
 const opts = buildRenderOptions();
 const serveUrl = await getServeUrl({ entry: 'src/short-entry.tsx' });
 const items = frames.map((frame) => ({
-  id: 'RobloxShort',
+  id: 'MotionBlocks',
   frame,
   output: path.join(outDir, `frame-${String(frame).padStart(4, '0')}.png`),
   skipIfExists: true,

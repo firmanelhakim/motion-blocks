@@ -46,7 +46,7 @@ export const SKIN_TONES = {
   brown: '#9C6644',
   dark: '#6B4226',
   deep: '#4A2C1A',
-  classic: '#F5CD30', // old-school yellow Roblox noob
+  classic: '#F5CD30', // old-school yellow blocky noob
 } as const;
 export type SkinToneName = keyof typeof SKIN_TONES;
 

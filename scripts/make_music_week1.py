@@ -6,7 +6,7 @@ with a different mood/key per story so no two videos share a track — and
 none of these reuse the batch tracks (moon-tide, black-hole, earth-stopped,
 ant-size, sky-blue), fallen-down.mp3 or solar-drift.wav.
 
-Run: ~/workspace/downloads/roblox-engine-drive/venv/bin/python scripts/make_music_week1.py
+Run: ~/workspace/downloads/engine-drive/venv/bin/python scripts/make_music_week1.py
 Writes public/music/{two-moons,mars-life,ringed-earth,fall-into-sun,stars-twinkle,light-speed,comet-hits}.wav
 """
 import os

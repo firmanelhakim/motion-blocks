@@ -148,9 +148,9 @@ export function getPresets() {
       videos: [],
     },
     'dialogue-test': {
-      description: 'RobloxShort chat-bubble verification stills',
+      description: 'MotionBlocks chat-bubble verification stills',
       stills: [195, 285, 375, 480].map((frame) => ({
-        id: 'RobloxShort',
+        id: 'MotionBlocks',
         frame,
         output: path.join(DIALOGUE_OUT, `dialogue-f${frame}.png`),
       })),

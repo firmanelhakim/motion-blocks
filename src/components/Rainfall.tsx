@@ -3,7 +3,7 @@ import {type V3} from '../kit/kit';
 import {Box} from '../environments/kit';
 
 /**
- * Rainfall.tsx: Deterministic Roblox-style rain — thin slanted streaks
+ * Rainfall.tsx: Deterministic blocky 3D rain — thin slanted streaks
  * falling in a loop over the street, for the lightning Short.
  * Reference: ~/workspace/user/files/1000374699_5_a8gc.jpg
  * (thin rain streaks slanting across a dark storm sky).

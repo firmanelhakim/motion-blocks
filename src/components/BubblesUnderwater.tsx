@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 import {type V3} from '../kit/kit';
 
 /**
- * BubblesUnderwater.tsx: Deterministic Roblox-style 3D stream of shiny air bubbles
+ * BubblesUnderwater.tsx: Deterministic blocky 3D stream of shiny air bubbles
  * rising in a loose column.
  * Ported from new-assets/bubbles/src/BubblesUnderwater.tsx.
  * DROPPED: slanting light rays, sandy seabed (+ sand/caustic textures), seaweed blades

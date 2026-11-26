@@ -41,7 +41,7 @@ function canvasTex(w: number, h: number, draw: (ctx: CanvasRenderingContext2D) =
   return tex;
 }
 
-/** Classic Roblox baseplate stud tile. */
+/** Classic blocky baseplate stud tile. */
 export function studTex(base: string, line: string, rx: number, ry = rx) {
   return cached(`stud:${base}:${line}:${rx}:${ry}`, () =>
     canvasTex(

@@ -4,7 +4,7 @@ import path from 'node:path';
 import fs from 'node:fs';
 
 // Usage: node render-story-range.mjs <start> <end> [port] [outDir]
-// Renders RobloxShort stills for frames start..end, skipping frames whose
+// Renders MotionBlocks stills for frames start..end, skipping frames whose
 // output file already exists. One bundle per process; run several ranges in
 // parallel on different ports (3050, 3051, 3052).
 // No hardcoded browserExecutable: Remotion uses its own Chrome for Testing
@@ -24,8 +24,8 @@ const opts = {
   },
   chromeMode: 'chrome-for-testing', serveStatic: {port: PORT}, timeoutInMilliseconds: 180_000,
 };
-const comp = await selectComposition({serveUrl: bundled, id: 'RobloxShort'});
-console.log(`composition RobloxShort: ${comp.durationInFrames} frames, ${comp.fps} fps, ${comp.width}x${comp.height}`);
+const comp = await selectComposition({serveUrl: bundled, id: 'MotionBlocks'});
+console.log(`composition MotionBlocks: ${comp.durationInFrames} frames, ${comp.fps} fps, ${comp.width}x${comp.height}`);
 const t0 = Date.now();
 let done = 0, skipped = 0;
 for (let f = START; f <= END; f++) {

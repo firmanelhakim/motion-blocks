@@ -1,8 +1,8 @@
 # Cleanup — what changed on the way to a real GitHub repo
 
-Date: 2026-11-26. Master source:
-`/home/hatch/workspace/roblox-engine-slim` (read-only — nothing in the
-master was modified). Staging copy: this folder.
+Date: 2026-11-26. Master source: the private working copy
+(read-only — nothing in the master was modified). Staging copy:
+this folder.
 
 ## Sizes
 
@@ -89,7 +89,7 @@ by design — see its header and `gravity_off.py`).
   files. One deliberate behaviour change: the old file ignored
   `src/story/currentStory.ts`, which would leave a fresh clone
   with no story file at all (the bundle fails — the file is
-  imported by `RobloxShortComposition`). The file is now tracked;
+  imported by `MotionBlocksComposition`). The file is now tracked;
   the committed copy is the ice_floats story (1742 frames).
   `make_short.py` still owns it and overwrites it per story.
 - **`README.md` rewritten** for a reader who has never seen the
@@ -117,7 +117,7 @@ by design — see its header and `gravity_off.py`).
 2. `scripts/render.mjs` — invalid `--props` JSON no longer crashes
    with a raw `SyntaxError` stack; it now prints
    `Invalid --props JSON: …` and exits 1. Verified by `tsc` exit 0.
-3. `src/RobloxShortComposition.tsx` — comment only: the audio
+3. `src/MotionBlocksComposition.tsx` — comment only: the audio
    credit named `scripts/generate-kokoro-tts.py`, which does not
    exist; corrected to `scripts/shorts/audio.py via make_short.py`.
 4. `tsconfig.json` — `include` now covers `remotion.config.ts`
@@ -143,7 +143,7 @@ by design — see its header and `gravity_off.py`).
 - `npx tsc --noEmit` (`node node_modules/typescript/bin/tsc -p .`)
   — exit 0, before and after the fixes above.
 - `node scripts/render.mjs list` — exit 0, 10 presets.
-- `node scripts/render.mjs still --comp RobloxShort --frames 300
+- `node scripts/render.mjs still --comp MotionBlocks --frames 300
   --out-dir out/test-still --port 3051` — exit 0, 41.6 s total
   (bundle + one still), `out/test-still/frame-0300.png`,
   1080×1920, 298,159 bytes, md5
@@ -196,7 +196,7 @@ Headline items from the full review (src + scripts, 2026-11-26).
   is stale relative to those fixes, or they never landed here —
   needs the maintainer's call: re-port them or correct the record.
 - **HIGH — one-shot anims use global story time**
-  (`RobloxShortComposition.tsx:38-41`): `wave`/`jump` started
+  (`MotionBlocksComposition.tsx:38-41`): `wave`/`jump` started
   mid-story snap to their end phase / an arbitrary phase. Needs
   keyframe-local time. Listed.
 - **HIGH — rotation lerps the long way around**
@@ -204,7 +204,7 @@ Headline items from the full review (src + scripts, 2026-11-26).
   shortest-path wrap; +3.0 → −3.0 rad spins ~344° instead of
   ~16°. Listed.
 - **HIGH — empty story data crashes** (`camera.ts:15-17`,
-  `RobloxShortComposition.tsx:71-73`, `ShortsHUD.tsx:65`):
+  `MotionBlocksComposition.tsx:71-73`, `ShortsHUD.tsx:65`):
   empty `cameraShots` / `scenes` / missing `captions` throw.
   No validation of generated story data in `src/`. Listed.
 - **HIGH — Playwright Chromium path pinned to revision 1181**
@@ -440,8 +440,8 @@ zero hits (excl. `node_modules`), test stills below.
   the *existing* fixture audio until audio is rebuilt once —
   intended fail-closed behaviour.
 - **Face-aware caption + `blackout` — FIXED (ported, not
-  re-implemented).** Found byte-identical in the v8 zip
-  (`roblox-engine-slim-v8.zip`) and in `roblox-engine-slim-v7-staging/`.
+  re-implemented).** Found byte-identical in the v8 engine archive
+  and in the v7 staging copy.
   `ShortsHUD.tsx` replaced with the v8 file, keeping the earlier
   clamp fix; `blackout` ported through schema → composition →
   environments → `TownMap` (lights off, traffic lights `"off"`).
@@ -454,7 +454,7 @@ zero hits (excl. `node_modules`), test stills below.
 - **Rotation lerp — FIXED.** Wrap-aware `lerpAngle` (shortest
   path) for `rotationY`/`rotationX`/`rotationZ`.
 - **Empty story data — FIXED.** Descriptive errors in
-  `camera.ts` and `RobloxShortComposition.tsx`; `ShortsHUD`
+  `camera.ts` and `MotionBlocksComposition.tsx`; `ShortsHUD`
   falls back to no caption when captions are missing.
 - **Chromium path — FIXED.** `detectBrowserExecutable()` in
   `render_lib.mjs`: `REMOTION_CHROME_PATH` → `CHROME_BIN` →
@@ -528,6 +528,112 @@ sets `blackout` yet — the pipeline does not emit it.
   1080×1920, duration 1.000 s, audio stream present. This also
   proves the fixture soundtrack works end-to-end in a fresh
   `story` render.
+
+## Rename pass (2026-11-26 — old internal working name → motion-blocks)
+
+The maintainer asked for the rename. Worked only in this staging
+copy; the master was never written to; nothing was pushed. The
+acceptance check is a case-insensitive grep for the old engine
+name over all git-tracked files: **zero hits** (verified with
+both the plain recursive grep, excl. `node_modules`/`out`/`.git`,
+and `git grep`). No note in this file spells out the old name, so
+the scrub stays clean.
+
+**Rename map applied (129 replacements in 50 files, plus 2 file
+renames):**
+- `package.json` / `package-lock.json`: package name →
+  `motion-blocks` (both `name` fields in the lockfile). `npm ci`
+  exit 0 afterwards, 317 packages.
+- Composition id → `MotionBlocks`; story type →
+  `MotionBlocksStory`; component → `MotionBlocksComposition`.
+- File renamed: `src/MotionBlocksComposition.tsx` (from the old
+  composition filename, same folder). Every import
+  updated: `src/short-entry.tsx`, `src/Root.tsx`,
+  `src/LocationGallery.tsx`, `src/KitStoryCheck.tsx`.
+- Skill directory renamed: `.agents/skills/motion-blocks-director`
+  (from the old skill directory name); every reference
+  updated (README, AGENTS.md, CONTRIBUTING, story template,
+  `make_short.py` header).
+- Comments/docstrings/docs: the old engine name → `motion-blocks`
+  or `blocky 3D` as fits ("…-style" → "blocky 3D"); the school
+  sign default text in `src/environments/town/buildings.tsx`
+  → `'TOWN SCHOOL'`; local `…-engine-drive` docstring paths →
+  generic `engine-drive`; master-source and archive references in
+  this file → generic wording.
+- The five archived root scripts in `archive/` were renamed the
+  same way (they are tracked, so they count toward the zero-hit
+  check).
+- Out of scope, left alone: identifiers that never contained the
+  old name (R6 rig, `R6Character`, kit clip names, `NoobEngine`
+  demo components); story content and narration untouched.
+
+**Generated story file:** `src/story/currentStory.ts` was NOT
+regenerated. Regenerating it from `stories/ice_floats.py` via the
+pipeline produces different story content from the committed file
+(opacity, colours, ice-cube size, expressions, camera positions,
+board text) — a pre-existing drift between the story source and
+the generated file, not a rename effect. Only the two type-name
+lines (import + annotation) were updated, so the loaded story is
+byte-identical to the committed one apart from those two lines
+(`git diff` on the file is exactly 2 lines). The generator
+(`scripts/shorts/scene.py`) now emits the new type name, so the
+next real regeneration matches. The drift itself is a follow-up
+for the maintainer: re-generating the story would change rendered
+pixels.
+
+**Verification (staging copy, this VM, pinned ports):**
+- `npx tsc --noEmit` exit 0. `python3 -m py_compile` on all
+  stories/scripts exit 0. `npm ci` exit 0 (317 packages).
+  `node scripts/render.mjs list` exit 0 (10 presets; the
+  chat-bubble preset now reads "MotionBlocks chat-bubble
+  verification stills").
+- `node scripts/render.mjs still --comp MotionBlocks --frames 300
+  --out-dir out/rename-verify --port 3051` exit 0, 25.7 s:
+  `frame-0300.png`, 1080×1920, 296,911 bytes, md5
+  `775334b74a5b177a40d761f7b45ba174` — **identical to the
+  pre-rename reference**. Viewed at full size: kitchen, both
+  characters whole, ice cube, caption "usually sink" below the
+  faces. Pixels did not change.
+- no_friction frame 0 under the new name: the story was loaded
+  with fake cues only (a loader that mirrors `build_story.py`
+  but does not overwrite the fixture soundtrack), then
+  `node scripts/render.mjs still --comp MotionBlocks --frames 0
+  --out-dir out/rename-verify-nofriction --port 3052` exit 0,
+  `frame-0000.png`, 1080×1920, 746,569 bytes, md5
+  `19fec0293ee4a648696fc3d68068553c`. Viewed at full size: Bolt
+  Boy slipping on the icy street, houses and icy reflections
+  behind him — the story's opening, correct. The school sign is
+  not visible in this frame. The loaded ice_floats story was
+  restored afterwards (diff vs the pushed commit is the 2
+  type-name lines only). The fake-cue load flagged long shots —
+  an artefact of the fake 90-frame beat timings, not a story
+  defect; the real story passed review with real cues. The
+  fixture soundtrack md5 is unchanged.
+- Scrub re-verified: the maintainer-name / channel-terms grep is
+  zero except the `LICENSE` file, which is deliberately untouched
+  (its copyright line is a separate decision).
+
+**NOT caused by the rename — pre-existing breakage found while
+verifying:** `npx remotion bundle src/short-entry.tsx` (the CLI
+bundle path, also used by `make_short.py --stills`) fails with
+`"import.meta" is not available with the "cjs" output format` /
+`The "path" argument must be of type string … Received undefined`
+(`scripts/render_lib.mjs:29`, reached via `remotion.config.ts`
+importing `safeConcurrency`). Proven pre-existing: a pristine
+worktree of the pushed commit fails identically, and the config
+import is already in that commit. The programmatic bundle path
+used by `render.mjs` (native ESM, real `import.meta`) works —
+that is what all the stills above were rendered through. This
+needs a fix of its own (the config should not pull an
+`import.meta`-dependent ESM module into the CJS-loaded config,
+or the CLI bundle step should go through `render.mjs`).
+
+**Directory name caveat:** the staging folder itself is still
+named after the old engine name, so the word appears in absolute
+paths (e.g. embedded in regenerated Python bytecode under
+`__pycache__/`). Those dirs are gitignored and were deleted, so
+the greps above are clean; renaming the folder itself is out of
+scope for this pass.
 
 ## Open questions for the maintainer
 

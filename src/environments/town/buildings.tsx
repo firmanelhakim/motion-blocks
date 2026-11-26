@@ -210,7 +210,7 @@ const AnimatedFlagpole: React.FC<{ p: V3; t?: number }> = ({ p, t }) => {
   return <Flagpole p={p} t={t ?? frame / 30} />;
 };
 
-export const School: React.FC<{ night?: boolean; t?: number; name?: string }> = React.memo(({ night = false, t, name = 'ROBLOX TOWN SCHOOL' }) => {
+export const School: React.FC<{ night?: boolean; t?: number; name?: string }> = React.memo(({ night = false, t, name = 'TOWN SCHOOL' }) => {
   const W = 40;
   const D = 14;
   const H = 13;

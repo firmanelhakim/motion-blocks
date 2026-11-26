@@ -1,4 +1,4 @@
-"""MY SUPERPOWER SHOWED UP A YEAR LATE - test Short for the Roblox engine.
+"""MY SUPERPOWER SHOWED UP A YEAR LATE - test Short for the motion-blocks engine.
 
 Build:   python scripts/make_short.py stories/late_power.py --stills
 Render:  python scripts/make_short.py stories/late_power.py --skip-tts --render

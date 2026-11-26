@@ -4,7 +4,7 @@ Stormy mood: D minor low pads, deep sub-bass rumble, slow pulse,
 sparse high bells — same recipe family as scripts/make_music_batch.py
 (pads + sub-bass + sparse bells), its own track so no two videos share one.
 
-Run: ~/workspace/downloads/roblox-engine-drive/venv/bin/python scripts/make_music_lightning.py
+Run: ~/workspace/downloads/engine-drive/venv/bin/python scripts/make_music_lightning.py
 Writes public/music/lightning.wav (~75 s, peak normalised to 0.5).
 """
 import os

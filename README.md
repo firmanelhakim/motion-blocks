@@ -1,6 +1,6 @@
-# roblox-shorts-engine
+# motion-blocks
 
-A Remotion + three.js engine that renders Roblox-style animated science
+A Remotion + three.js engine that renders blocky 3D animated science
 Shorts for a YouTube channel: portrait **1080×1920, 30 fps**,
 roughly 45–60 seconds each. A story is a Python file (`stories/<slug>.py`)
 describing beats, cast, scenes and camera shots; the pipeline turns it
@@ -45,8 +45,8 @@ npm 10.9.4, ffmpeg 8.1.2):
   first render. `CHROME_BIN` overrides the browser path.
 
 ```bash
-git clone <repo> roblox-shorts-engine
-cd roblox-shorts-engine
+git clone <repo> motion-blocks
+cd motion-blocks
 npm ci            # installs 317 packages (verified: 16 s on the cleanup VM)
 npx tsc --noEmit  # typecheck — must exit 0 before rendering
 ```
@@ -55,7 +55,7 @@ Render one test still of the story currently loaded in
 `src/story/currentStory.ts` (ice_floats, 1742 frames):
 
 ```bash
-node scripts/render.mjs still --comp RobloxShort --frames 300 \
+node scripts/render.mjs still --comp MotionBlocks --frames 300 \
   --out-dir out/test-still --port 3051
 # → out/test-still/frame-0300.png (1080×1920; ~42 s on a 1.5-CPU VM,
 #   most of it the one-time bundle — a real render machine is far faster)
@@ -66,7 +66,7 @@ node scripts/render.mjs still --comp RobloxShort --frames 300 \
 1. **Write the story.** Copy `stories/_template.py` to
    `stories/<slug>.py` and fill in `TITLE`, `BEATS`, `SFX`, `MUSIC`,
    `CAST` and `scenes(T)`. The skill in
-   `.agents/skills/roblox-shorts-director/SKILL.md` is the full
+   `.agents/skills/motion-blocks-director/SKILL.md` is the full
    reference (beats, music, SFX, cast, scenes, camera catalog).
    `stories/hair_color.py` is a complete example.
 2. **Build it** (needs the Python venv + synced assets — see below):
@@ -139,10 +139,10 @@ Related tools (not the render CLI):
 
 | Path | What it is |
 |---|---|
-| `src/` | Engine code: `RobloxShortComposition.tsx` (the Short), `Root.tsx` + `index.ts` (all demo compositions), `short-entry.tsx` (RobloxShort only), `components/` (characters, `ShortsHUD` captions/bubbles), `kit/` (kit-character clips), `characters/` (looks), `environments/` (sets), `story/` (camera, keyframes, loaded `currentStory.ts`), `types/schema.ts` |
+| `src/` | Engine code: `MotionBlocksComposition.tsx` (the Short), `Root.tsx` + `index.ts` (all demo compositions), `short-entry.tsx` (MotionBlocks only), `components/` (characters, `ShortsHUD` captions/bubbles), `kit/` (kit-character clips), `characters/` (looks), `environments/` (sets), `story/` (camera, keyframes, loaded `currentStory.ts`), `types/schema.ts` |
 | `stories/` | 44 story files + `_template.py`. `dialogue_test.py` and `kit_heroes_test.py` are verification stories referenced by `RIG_CONTRACT.md`. `gravity_off_v1.py` is the superseded v1, kept deliberately (see its header + `gravity_off.py`). |
 | `scripts/` | `make_short.py` (story pipeline), `render.mjs` + `render_lib.mjs` + `render_presets.mjs` (render CLI), `render_chunks.py` (older chunked renderer), `make_music_*.py` (music generation), `shorts/` (`audio.py`, `scene.py`) |
-| `.agents/skills/roblox-shorts-director/` | The director skill: story format, catalogs, rules |
+| `.agents/skills/motion-blocks-director/` | The director skill: story format, catalogs, rules |
 | `archive/` | Superseded code kept for reference, not used: `root-render-scripts/` (52 one-off `render-*.mjs` scripts from Nov 20–22, all superseded by `scripts/render.mjs`), `test-stories/` (5 `_test_*.py` prop/camera fixtures). See `CLEANUP.md`. |
 | `AGENTS.md`, `RIG_CONTRACT.md` | Agent instructions + rig contract (read both before changing characters, poses or scenes) |
 | `CONTRIBUTING.md`, `ARCHITECTURE.md` | How to contribute; how the pieces fit together |
@@ -195,7 +195,7 @@ one test still of the loaded ice_floats story (frame 300) with a
 pinned port:
 
 ```bash
-node scripts/render.mjs still --comp RobloxShort --frames 300 \
+node scripts/render.mjs still --comp MotionBlocks --frames 300 \
   --out-dir out/test-still --port 3051
 # → out/test-still/frame-0300.png (1080×1920). A non-blank frame
 #   with the kitchen scene and a caption means the clone builds and
@@ -244,7 +244,7 @@ node scripts/render.mjs still --comp RobloxShort --frames 300 \
   the fallback font. Frames are still deterministic on identical
   machines, but can differ between machines with different fonts.
 - **`public/soundtrack.wav` is the audio source of truth at render
-  time.** `RobloxShortComposition` plays it via
+  time.** `MotionBlocksComposition` plays it via
   `<Audio src={staticFile('soundtrack.wav')} />`; the ffmpeg
   assembly muxes the same file. If the wav and `currentStory.ts`
   are from different stories, audio and video will not match.

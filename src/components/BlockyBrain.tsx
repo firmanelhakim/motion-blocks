@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import {RBox, type V3, useCanvasTexture} from '../kit/kit';
 
 /**
- * BlockyBrain.tsx: Deterministic Roblox-style pink rounded-block human brain
+ * BlockyBrain.tsx: Deterministic blocky 3D pink rounded-block human brain
  * with clean fold lines, a glowing blue cleansing wash flowing over the right side,
  * and falling glowing droplets.
  * Ported from new-assets/blocky-brain/src/BlockyBrain.tsx.

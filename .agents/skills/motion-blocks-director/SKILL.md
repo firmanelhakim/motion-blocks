@@ -1,14 +1,14 @@
 ---
-name: roblox-shorts-director
+name: motion-blocks-director
 description: >-
-  End-to-end pipeline for 9:16 3D Roblox storytelling Shorts ("In this town / In this world, <absurd rule>...")
+  End-to-end pipeline for 9:16 3D blocky storytelling Shorts ("In this town / In this world, <absurd rule>...")
   built with Remotion + Three.js. A video is assembled from ready-made parts: a script of beats, the character
   constructor (hair/clothes/accessories), town locations, animations, props, camera helpers, SFX presets and a music
   track. All of it goes into one story file that one command turns into an MP4.
-  Activate whenever the user asks to create, write, or render a Roblox Short or gives a story topic/rule.
+  Activate whenever the user asks to create, write, or render a motion-blocks Short or gives a story topic/rule.
 ---
 
-# Roblox Shorts Director
+# Motion-Blocks Director
 
 A Short is **one Python file** in `stories/<slug>.py`. It holds the script, music, SFX, cast and scenes, all picked from the catalogs below. One command does the rest:
 
@@ -257,7 +257,7 @@ The stage of every location is the local origin. Put actors at x ∈ [-6, 6], z 
 | `scripts/make_short.py` | Pipeline runner |
 | `scripts/shorts/audio.py` | Kokoro narration, captions, music bed, SFX presets |
 | `scripts/shorts/scene.py` | kf / shot / camera helpers, rule checks, TS writer |
-| `src/story/currentStory.ts` | Generated story rendered by the `RobloxShort` composition |
+| `src/story/currentStory.ts` | Generated story rendered by the `MotionBlocks` composition |
 | `src/characters/` | Constructor: `look.ts` (presets, palettes), `clothing.ts` (textures), `Accessories.tsx` |
 | `src/components/` | `R6Character.tsx`, `HairSystem.tsx`, `ShortsHUD.tsx` (captions) |
 | `src/environments/` | `TownMap` + buildings / props, `interiors.tsx`, `locations.ts`, `kit.tsx` |

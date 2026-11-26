@@ -1,6 +1,6 @@
 import React from 'react';
 import { Composition } from 'remotion';
-import { RobloxShortComposition } from './RobloxShortComposition';
+import { MotionBlocksComposition } from './MotionBlocksComposition';
 import { CURRENT_STORY } from './story/currentStory';
 import { GALLERY_PAGES, LocationGallery } from './LocationGallery';
 import { CharacterLineup, FRAMES_PER_PAGE, LINEUP_PAGES } from './CharacterLineup';
@@ -28,8 +28,8 @@ export const RemotionRoot: React.FC = () => {
   return (
     <>
       <Composition
-        id="RobloxShort"
-        component={RobloxShortComposition}
+        id="MotionBlocks"
+        component={MotionBlocksComposition}
         durationInFrames={CURRENT_STORY.durationInFrames}
         fps={CURRENT_STORY.fps}
         width={CURRENT_STORY.width}

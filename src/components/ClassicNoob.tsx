@@ -33,7 +33,7 @@ export const COLORS = {
 
 const useFaceTexture = () =>
   useCanvasTexture((g) => {
-    // Classic warm Roblox smile with eyebrows — same layout as the engine.
+    // Classic warm blocky smile with eyebrows — same layout as the engine.
     g.strokeStyle = COLORS.eyeDark;
     g.fillStyle = COLORS.eyeDark;
     g.lineCap = 'round';

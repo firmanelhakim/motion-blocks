@@ -14,7 +14,7 @@
  * assembleStillsToVideo.
  *
  * Examples:
- *   node scripts/render.mjs still --comp RobloxShort --frames 0,60,120 --out-dir out/stills --scale 0.5
+ *   node scripts/render.mjs still --comp MotionBlocks --frames 0,60,120 --out-dir out/stills --scale 0.5
  *   node scripts/render.mjs range --comp CircleShowcase --start 0 --end 100 --out-dir circle-stills --port 3050
  *   node scripts/render.mjs story sky_blue --port 3051
  *   node scripts/render.mjs story sky_blue --start 0 --end 299 --out out/sky_blue-f0-299.mp4 --port 3051
@@ -179,12 +179,12 @@ async function main() {
   }
 
   if (cmd === 'still') {
-    const comp = flags.comp || 'RobloxShort';
+    const comp = flags.comp || 'MotionBlocks';
     const frames = String(flags.frames ?? '0').split(',').filter(Boolean).map(Number);
     const outDir = path.resolve(String(flags['out-dir'] || 'out/stills'));
     const pattern = String(flags.pattern || 'frame-{frame:4}.png');
     const skipExisting = Boolean(flags['skip-existing']);
-    const entry = comp === 'RobloxShort' ? 'src/short-entry.tsx' : 'src/index.ts';
+    const entry = comp === 'MotionBlocks' ? 'src/short-entry.tsx' : 'src/index.ts';
     const serveUrl = await getServeUrl({ bundleDir: flags.bundle, entry });
     const items = frames.map((frame) => ({
       id: comp,
@@ -299,7 +299,7 @@ async function main() {
     let comp;
     try {
       comp = await selectComposition({
-        serveUrl, id: 'RobloxShort', inputProps,
+        serveUrl, id: 'MotionBlocks', inputProps,
         puppeteerInstance: browser, port: opts.port, logLevel: opts.logLevel,
       });
     } finally {
@@ -324,7 +324,7 @@ async function main() {
     const items = [];
     for (let f = start; f <= endF; f++) {
       items.push({
-        id: 'RobloxShort',
+        id: 'MotionBlocks',
         frame: f,
         inputProps,
         output: path.join(stillsDir, stillsFileName(f)),

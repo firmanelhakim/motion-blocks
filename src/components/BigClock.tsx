@@ -2,7 +2,7 @@ import React, {useMemo} from 'react';
 import {RBox, type V3, useCanvasTexture} from '../kit/kit';
 
 /**
- * BigClock.tsx: Deterministic Roblox-style blocky wall clock with bold black numbers,
+ * BigClock.tsx: Deterministic blocky wall clock with bold black numbers,
  * stepped blocky rim, two thick spinning black hands, and a center hub.
  * Ported from new-assets/big-clock/src/BigClock.tsx.
  * DROPPED: plain light-grey wall & floor, LookingBoy scaffolding

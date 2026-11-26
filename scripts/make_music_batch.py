@@ -4,7 +4,7 @@ Each track: ~75 s, peak normalised to 0.5, 2 s fade in / 5 s fade out.
 Same recipe family as solar-drift.wav (pads + sub-bass + sparse bells),
 with a different mood per story so no two videos share a track.
 
-Run: ~/workspace/downloads/roblox-engine-drive/venv/bin/python scripts/make_music_batch.py
+Run: ~/workspace/downloads/engine-drive/venv/bin/python scripts/make_music_batch.py
 Writes public/music/{moon-tide,black-hole,earth-stopped,ant-size,sky-blue}.wav
 """
 import os

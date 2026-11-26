@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { AbsoluteFill, Audio, staticFile, useCurrentFrame, useVideoConfig } from 'remotion';
 import { ThreeCanvas } from '@remotion/three';
 import { useThree } from '@react-three/fiber';
-import { CharacterId, CharacterKeyframe, RobloxShortStory, AnimationMode } from './types/schema';
+import { CharacterId, CharacterKeyframe, MotionBlocksStory, AnimationMode } from './types/schema';
 import { R6Character } from './components/R6Character';
 import { BoltBoy } from './components/BoltBoy';
 import { CasualMan } from './components/CasualMan';
@@ -79,8 +79,8 @@ const CameraRig: React.FC<{ cam: CameraState }> = ({ cam }) => {
   return null;
 };
 
-export const RobloxShortComposition: React.FC<{
-  story?: RobloxShortStory;
+export const MotionBlocksComposition: React.FC<{
+  story?: MotionBlocksStory;
   muted?: boolean;
 }> = ({ story = CURRENT_STORY, muted = false }) => {
   const frame = useCurrentFrame();
@@ -88,7 +88,7 @@ export const RobloxShortComposition: React.FC<{
 
   if (!story.scenes || story.scenes.length === 0) {
     throw new Error(
-      'RobloxShortComposition: story has no scenes (story.scenes is missing or empty) — a story needs at least one scene with cameraShots and characters.'
+      'MotionBlocksComposition: story has no scenes (story.scenes is missing or empty) — a story needs at least one scene with cameraShots and characters.'
     );
   }
 
@@ -147,7 +147,7 @@ export const RobloxShortComposition: React.FC<{
         {/* Dynamic Camera Rig */}
         <CameraRig cam={cam} />
 
-        {/* Roblox Studio Style Lighting */}
+        {/* Studio-style lighting */}
         <ambientLight
           intensity={currentScene.isNight ? 0.55 : 0.85}
           color={currentScene.isNight ? '#94A3B8' : '#F8FAFC'}

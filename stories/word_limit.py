@@ -1,4 +1,4 @@
-"""EVERYONE GETS A WORD LIMIT - 9:16 Roblox Short.
+"""EVERYONE GETS A WORD LIMIT - 9:16 motion-blocks Short.
 
 Build:   python scripts/make_short.py stories/word_limit.py --stills
 Render:  python scripts/make_short.py stories/word_limit.py --skip-tts --render

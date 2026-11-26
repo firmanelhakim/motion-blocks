@@ -114,7 +114,7 @@ function createFaceTexture(skinColor: string, expression: ExpressionId, extras: 
     ctx.lineTo(cx + 28, cy + 52);
     ctx.stroke();
   } else if (expression === 'shocked' || expression === 'panic') {
-    // Expressive Roblox terror/shock face like ref_1_t25
+    // Expressive blocky terror/shock face like ref_1_t25
     ctx.fillStyle = '#FFFFFF';
     ctx.lineWidth = 11;
     ctx.beginPath();
@@ -260,7 +260,7 @@ function createFaceTexture(skinColor: string, expression: ExpressionId, extras: 
     ctx.lineTo(cx + 52, cy + 48);
     ctx.stroke();
   } else {
-    // Classic warm Roblox smile with eyebrows
+    // Classic warm blocky smile with eyebrows
     ctx.lineWidth = 12;
     ctx.beginPath();
     ctx.arc(cx - 66, cy - 58, 32, 1.2 * Math.PI, 1.8 * Math.PI, false);
@@ -371,7 +371,7 @@ function createWordCounterTexture(prop: PropId): THREE.CanvasTexture | null {
 }
 
 /**
- * Smoothly beveled Roblox cylinder head geometry (rounded top and bottom rims).
+ * Smoothly beveled blocky cylinder head geometry (rounded top and bottom rims).
  */
 function buildBeveledHeadGeometry(): THREE.BufferGeometry {
   const pts: THREE.Vector2[] = [];
@@ -807,7 +807,7 @@ export const R6Character: React.FC<R6CharacterProps> = ({
         {/* 2. NECK & HEAD */}
         <group position={[0, 1.0, 0]} rotation={[neckRotX, neckRotY, neckRotZ]}>
           <group position={[0, 0.62, 0]}>
-            {/* Beveled Roblox Cylinder Head */}
+            {/* Beveled Blocky Cylinder Head */}
             <mesh geometry={headGeo} castShadow receiveShadow>
               <meshStandardMaterial color={skin} roughness={0.38} />
             </mesh>

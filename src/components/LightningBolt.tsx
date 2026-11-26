@@ -3,7 +3,7 @@ import {type V3} from '../kit/kit';
 import {Box} from '../environments/kit';
 
 /**
- * LightningBolt.tsx: Deterministic Roblox-style jagged lightning bolt,
+ * LightningBolt.tsx: Deterministic blocky 3D jagged lightning bolt,
  * built for the lightning Short ("Why do we see
  * lightning before we hear thunder?").
  *

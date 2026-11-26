@@ -42,7 +42,7 @@ the old README.
 
 1. Copy `stories/_template.py` to `stories/<slug>.py`.
 2. Fill in `TITLE`, `BEATS`, `SFX`, `MUSIC`, `CAST`, `scenes(T)`
-   following `.agents/skills/roblox-shorts-director/SKILL.md`
+   following `.agents/skills/motion-blocks-director/SKILL.md`
    (`stories/hair_color.py` is a complete example).
 3. Run the pipeline and fix rule checks before rendering:
    ```bash
@@ -59,7 +59,7 @@ the old README.
 ## Adding a character / scene / location
 
 - New character rig: add the component under `src/components/`,
-  wire it in `RobloxShortComposition.tsx` (actor → component map)
+  wire it in `MotionBlocksComposition.tsx` (actor → component map)
   and `src/characters/look.ts` if it needs a look/kit/scale entry.
   Kit characters need clips in `src/kit/kit.tsx`; anims with no
   clip fall back to `idle` (see `STORY_ANIM_TO_CLIP`).
@@ -79,7 +79,7 @@ the old README.
 ```bash
 npx tsc --noEmit                                   # must exit 0
 node scripts/render.mjs list                       # presets still load
-node scripts/render.mjs still --comp RobloxShort --frames 300 \
+node scripts/render.mjs still --comp MotionBlocks --frames 300 \
   --out-dir out/test-still --port 3051             # one still renders, non-blank
 ```
 

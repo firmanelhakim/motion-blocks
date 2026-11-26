@@ -31,7 +31,7 @@ Filmable-limits notes (honest):
   pose cannot hold a prop upright in front, while fx places the flame
   exactly where the Gemini candle reference has it).
 - `sit` is NOT used for Cas: kit characters fall back to idle for sit
-  (RobloxShortComposition.tsx). R6 `sit` is procedural and fine for Max,
+  (MotionBlocksComposition.tsx). R6 `sit` is procedural and fine for Max,
   but this story never needs it.
 - Kit characters are ~7 studs tall: keep kit close-ups at scale=1.5
   (head 6.6) and kit mediums as static_shot with target y ~5.5.

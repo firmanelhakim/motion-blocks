@@ -1,8 +1,8 @@
-# Roblox Shorts Engine — Agent Instructions
+# Motion-Blocks Engine — Agent Instructions
 
-Whenever the user asks to create, write, or render a Roblox Short video (or gives a story topic/rule):
+Whenever the user asks to create, write, or render a motion-blocks Short video (or gives a story topic/rule):
 
-1. Read and follow the [`roblox-shorts-director`](./.agents/skills/roblox-shorts-director/SKILL.md) skill.
+1. Read and follow the [`motion-blocks-director`](./.agents/skills/motion-blocks-director/SKILL.md) skill.
 2. Write one story file `stories/<slug>.py` (copy `stories/_template.py`; full example: `stories/hair_color.py`) from the catalogs in the skill: beats, music, SFX, cast, scenes.
 3. Run the pipeline end-to-end without asking unnecessary permission questions
    (use the venv Python `venv/bin/python` — Kokoro TTS lives in the venv;

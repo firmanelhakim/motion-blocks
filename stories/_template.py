@@ -2,7 +2,7 @@
     python scripts/make_short.py stories/<slug>.py --stills
     python scripts/make_short.py stories/<slug>.py --skip-tts --render
 All parts (presets, hair, clothes, locations, anims, props, SFX) are listed in
-.agents/skills/roblox-shorts-director/SKILL.md. This template is a runnable mini-story.
+.agents/skills/motion-blocks-director/SKILL.md. This template is a runnable mini-story.
 """
 from shorts.scene import HALF, OFF, close_up, cover, face, hold, kf, medium, shot, wide  # noqa: F401
 

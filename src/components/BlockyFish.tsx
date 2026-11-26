@@ -2,7 +2,7 @@ import React from 'react';
 import {RBox, type V3} from '../kit/kit';
 
 /**
- * BlockyFish.tsx: Deterministic Roblox-style 3D clownfish.
+ * BlockyFish.tsx: Deterministic blocky 3D clownfish.
  * Facing +z, up +y. Pure function of t and props.
  * Ported from new-assets/blocky-fish/src/BlockyFish.tsx.
  * Standalone prop — no scene scaffolding to drop.

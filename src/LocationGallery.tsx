@@ -1,7 +1,7 @@
 import React from 'react';
-import { RobloxShortComposition } from './RobloxShortComposition';
+import { MotionBlocksComposition } from './MotionBlocksComposition';
 import { LOCATION_INFO, LocationId, HouseVariantId } from './environments/locations';
-import { CharacterKeyframe, RobloxShortStory, SceneSegment } from './types/schema';
+import { CharacterKeyframe, MotionBlocksStory, SceneSegment } from './types/schema';
 
 /**
  * One frame per location page (1080×1920), rendered through the real short composition
@@ -69,7 +69,7 @@ const scenes: SceneSegment[] = GALLERY_PAGES.map((pg, i) => {
   };
 });
 
-export const GALLERY_STORY: RobloxShortStory = {
+export const GALLERY_STORY: MotionBlocksStory = {
   title: 'Location gallery',
   fps: 30,
   durationInFrames: GALLERY_PAGES.length,
@@ -86,4 +86,4 @@ export const GALLERY_STORY: RobloxShortStory = {
   })),
 };
 
-export const LocationGallery: React.FC = () => <RobloxShortComposition story={GALLERY_STORY} />;
+export const LocationGallery: React.FC = () => <MotionBlocksComposition story={GALLERY_STORY} />;

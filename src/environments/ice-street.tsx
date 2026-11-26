@@ -7,7 +7,7 @@ import {ScienceFxMesh} from './fx';
 
 /**
  * Ice street (ported from new-assets/ice-street SlipperyStreet.tsx):
- * deterministic Roblox-style 3D icy town street for the no-friction topic —
+ * deterministic blocky 3D icy town street for the no-friction topic —
  * procedural ice road texture + bump map, planar mirror reflection layer of
  * the houses/trees/lamps beneath the semi-transparent ice, frozen sidewalks
  * with stepped snowbanks, lamps, houses, pine trees, blocky clouds.

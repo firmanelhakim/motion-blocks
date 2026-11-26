@@ -1,6 +1,6 @@
 import React from 'react';
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
-import { RobloxShortStory, CharacterId, CharacterKeyframe } from '../types/schema';
+import { MotionBlocksStory, CharacterId, CharacterKeyframe } from '../types/schema';
 import { evaluateCharacterKeyframes } from '../story/keyframes';
 import { CameraState, cameraStateForFrame, projectToScreen } from '../story/camera';
 import { kitForActor, scaleForActor } from '../characters/look';
@@ -73,7 +73,7 @@ const CLOSE_UP_NO_FACE_TOP_FRAC = 0.8;
 const CHIN_DROP_KIT = 2.6;
 const CHIN_DROP_R6 = 1.6;
 // Characters parked off-screen sit at y <= -50 (OFF = [0, -80, 0]); they
-// have no visible face. Same threshold as RobloxShortComposition.
+// have no visible face. Same threshold as MotionBlocksComposition.
 const OFFSCREEN_Y = -50;
 // Frames sampled across the active shot when deciding the caption slot.
 const CAPTION_SHOT_SAMPLES = 5;
@@ -117,7 +117,7 @@ function faceBandAtFrame(
   keyframes: CharacterKeyframe[],
   frame: number,
   cam: CameraState,
-  story: RobloxShortStory,
+  story: MotionBlocksStory,
   width: number,
   height: number
 ): { headTopY: number; chinY: number } | null {
@@ -166,8 +166,8 @@ function faceBandAtFrame(
  * with a top-slot caption are rarer, and a face overlap is the fail).
  */
 function captionTopPx(
-  story: RobloxShortStory,
-  currentScene: RobloxShortStory['scenes'][number] | undefined,
+  story: MotionBlocksStory,
+  currentScene: MotionBlocksStory['scenes'][number] | undefined,
   frame: number,
   cam: CameraState | null,
   width: number,
@@ -251,8 +251,8 @@ function captionTopPx(
 }
 
 export const ShortsHUD: React.FC<{
-  story: RobloxShortStory;
-  currentScene?: RobloxShortStory['scenes'][number];
+  story: MotionBlocksStory;
+  currentScene?: MotionBlocksStory['scenes'][number];
   cam?: CameraState | null;
   actorStates?: Partial<Record<CharacterId, CharacterKeyframe>>;
 }> = ({ story, currentScene: sceneProp, cam: camProp, actorStates }) => {
@@ -262,7 +262,7 @@ export const ShortsHUD: React.FC<{
   // A story with no captions (missing/empty `captions`) simply shows no
   // caption — the HUD is an overlay, so a missing narration track is not
   // fatal here. (Empty `scenes`/`cameraShots` fail loudly upstream in
-  // RobloxShortComposition / cameraStateForFrame instead.)
+  // MotionBlocksComposition / cameraStateForFrame instead.)
   const currentCaption = (story.captions ?? []).find(
     (c) => frame >= c.startFrame && frame <= c.endFrame
   );

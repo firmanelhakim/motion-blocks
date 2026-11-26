@@ -29,7 +29,7 @@ out/<slug>.mp4               (stills + ffmpeg)
   `src/story/currentStory.ts`. Preview stills go through
   `scripts/render.mjs still` at half scale.
 - **Render pipeline (Node):** `scripts/render.mjs` bundles
-  `src/short-entry.tsx` (RobloxShort only), renders every frame as
+  `src/short-entry.tsx` (MotionBlocks only), renders every frame as
   a PNG still with Remotion's `renderStill`, and assembles with
   ffmpeg (`scripts/render_lib.mjs: assembleStillsToVideo`).
 
@@ -41,19 +41,19 @@ nothing in the pipeline detects that.
 
 ## Composition tree
 
-`src/Root.tsx` registers every composition (RobloxShort, BoltBoy
+`src/Root.tsx` registers every composition (MotionBlocks, BoltBoy
 showcases, KitPoseLab, KitFly, FaceLab, KickCheck, BowCheck,
 ClipCheck, R6KitCheck, KitStoryCheck, CircleShowcase, WaistCheck,
 TurnCheck, PerformanceLab, CharacterLineup, LocationGallery,
 AssetCheck, …). Two entry points exist:
 
-- `src/short-entry.tsx` — registers **only** `RobloxShort`. This is
+- `src/short-entry.tsx` — registers **only** `MotionBlocks`. This is
   what the story render bundles: smaller, faster, and the only
   composition the story path needs.
 - `src/index.ts` — registers everything in `Root.tsx`. Used by the
   `still` / `range` / `preset` commands and by Remotion Studio.
 
-`RobloxShortComposition` (one frame) does, in order:
+`MotionBlocksComposition` (one frame) does, in order:
 
 1. Finds the current scene for the frame (`frame` in
    `[startFrame, endFrame)`, else the last scene).
@@ -139,7 +139,7 @@ instead, because that stays on the stills+ffmpeg path.
 
 ## What lives where (code map)
 
-- `src/types/schema.ts` — the story data model (`RobloxShortStory`,
+- `src/types/schema.ts` — the story data model (`MotionBlocksStory`,
   scenes, keyframes, captions, cast).
 - `src/story/camera.ts` — camera interpolation + 3D→screen
   projection (shared by the 3D rig and the HUD).

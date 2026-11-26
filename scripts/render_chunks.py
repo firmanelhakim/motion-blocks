@@ -1,4 +1,4 @@
-"""Chunked render for Roblox Shorts.
+"""Chunked render for motion-blocks Shorts.
 
 Renders a story in N frame-range chunks (Remotion --frames + --muted),
 concatenates the video-only chunks with ffmpeg, then muxes the full
@@ -160,7 +160,7 @@ def check_audio_freshness(story_path):
 def render_chunk(idx, start, end, chunk_dir, workers):
     """Render one chunk (frames [start, end)) muted, video-only."""
     out = os.path.join(chunk_dir, f"chunk-{idx:03d}.mp4")
-    cmd = REMOTION + ["render", BUNDLE, "RobloxShort", out,
+    cmd = REMOTION + ["render", BUNDLE, "MotionBlocks", out,
                       f"--frames={start}-{end - 1}", "--muted",
                       "--gl=angle", f"--chromium-flags={CHROMIUM_FLAGS}"]
     if workers > 1:
@@ -260,7 +260,7 @@ def main():
         if args.plan:
             for i, (s, e) in enumerate(ranges):
                 out = os.path.join(chunk_dir, f"chunk-{i:03d}.mp4")
-                print(" ".join(REMOTION + ["render", BUNDLE, "RobloxShort", out,
+                print(" ".join(REMOTION + ["render", BUNDLE, "MotionBlocks", out,
                                             f"--frames={s}-{e - 1}", "--muted", "--gl=angle",
                                             f"--chromium-flags={CHROMIUM_FLAGS}"]))
             print(f"# then assemble: python scripts/render_chunks.py --assemble-only --chunk-dir {chunk_dir} --out {out_path}")

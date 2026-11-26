@@ -1,15 +1,15 @@
 import React from 'react';
-import { RobloxShortComposition } from './RobloxShortComposition';
-import { RobloxShortStory } from './types/schema';
+import { MotionBlocksComposition } from './MotionBlocksComposition';
+import { MotionBlocksStory } from './types/schema';
 
 /**
  * KitStoryCheck — verifies the kit BoltBoy renders inside the story pipeline.
  * Hero is the canonical kit BoltBoy (cast marker `{kit: 'boltboy'}`), friend
  * is an R6 preset — so one render exercises both the kit branch and the
- * R6 branch of RobloxShortComposition. Minimal street scene, 90 frames.
+ * R6 branch of MotionBlocksComposition. Minimal street scene, 90 frames.
  * This is a test composition only; it does not touch currentStory.ts.
  */
-const TEST_STORY: RobloxShortStory = {
+const TEST_STORY: MotionBlocksStory = {
   title: 'KIT STORY CHECK',
   fps: 30,
   durationInFrames: 90,
@@ -53,5 +53,5 @@ const TEST_STORY: RobloxShortStory = {
 };
 
 export const KitStoryCheck: React.FC = () => {
-  return <RobloxShortComposition story={TEST_STORY} />;
+  return <MotionBlocksComposition story={TEST_STORY} />;
 };

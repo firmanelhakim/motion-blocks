@@ -20,7 +20,7 @@ Render:  python scripts/make_short.py stories/bolt_boy_first.py --skip-tts --ren
 
 NOTE ON THE HERO (WIRED IN 2026-11-21): the hero is the canonical kit
 BoltBoy (`src/components/BoltBoy.tsx`) — curved smile + tongue, extruded
-3D bolt, two-tone sneakers — rendered by RobloxShortComposition via the
+3D bolt, two-tone sneakers — rendered by MotionBlocksComposition via the
 cast marker `{"kit": "boltboy"}`. The story's `anim` is mapped to a kit
 clip (walk/idle/wave). The R6 preset `bolt_boy` (look.ts) is no longer
 used for this hero. Stills first, as always — check the kit hero at

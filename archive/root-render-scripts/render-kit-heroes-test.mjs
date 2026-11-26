@@ -1,4 +1,4 @@
-// Render RobloxShort stills for the kit-heroes test (walk + wave).
+// Render MotionBlocks stills for the kit-heroes test (walk + wave).
 import { bundle } from '@remotion/bundler';
 import { renderStill, selectComposition } from '@remotion/renderer';
 import path from 'node:path';
@@ -14,7 +14,7 @@ const opts = {
   },
   chromeMode: 'chrome-for-testing', serveStatic: { port: 3050 }, timeoutInMilliseconds: 180_000,
 };
-const comp = await selectComposition({ serveUrl: bundled, id: 'RobloxShort' });
+const comp = await selectComposition({ serveUrl: bundled, id: 'MotionBlocks' });
 for (const f of [200, 400]) {
   await renderStill({ ...opts, composition: comp, serveUrl: bundled, frame: f, output: path.join(OUT, `kitheroes-f${f}.png`) });
   console.log('frame', f, 'ok');

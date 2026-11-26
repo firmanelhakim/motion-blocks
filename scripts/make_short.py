@@ -1,4 +1,4 @@
-"""One-command Roblox Short pipeline.
+"""One-command motion-blocks Short pipeline.
 
     python scripts/make_short.py stories/<slug>.py            # voice+music+SFX -> scenes -> checks -> typecheck
     python scripts/make_short.py stories/<slug>.py --stills   # + preview stills (one per camera shot) + contact sheets
@@ -8,7 +8,7 @@
     --log error     Remotion log level (default: error)
     --force         render even if rule checks report problems
 
-A story file defines TITLE, BEATS, SFX, MUSIC, CAST and scenes(T). See .agents/skills/roblox-shorts-director/SKILL.md.
+A story file defines TITLE, BEATS, SFX, MUSIC, CAST and scenes(T). See .agents/skills/motion-blocks-director/SKILL.md.
 """
 from __future__ import annotations
 
@@ -168,7 +168,7 @@ def main():
     if not (args.stills or args.render):
         return
 
-    # 4. Bundle once (slim entrypoint for RobloxShort), then stills / render from the bundle
+    # 4. Bundle once (slim entrypoint for MotionBlocks), then stills / render from the bundle
     entry = ENTRY_SLIM if os.path.exists(ENTRY_SLIM) else ENTRY_FULL
     run(REMOTION + ["bundle", entry, f"--out-dir={BUNDLE}", f"--log={args.log}"], stdout=subprocess.DEVNULL)
 
@@ -196,7 +196,7 @@ def main():
             run([
                 "node", render_script, "still",
                 "--bundle", BUNDLE,
-                "--comp", "RobloxShort",
+                "--comp", "MotionBlocks",
                 "--frames", ",".join(str(fr) for fr in frames),
                 "--out-dir", out_dir,
                 "--pattern", "f{frame:5}.png",
@@ -209,7 +209,7 @@ def main():
             for fr in frames:
                 p = os.path.join(out_dir, f"f{fr:05d}.png")
                 run(REMOTION + [
-                    "still", BUNDLE, "RobloxShort", p, f"--frame={fr}",
+                    "still", BUNDLE, "MotionBlocks", p, f"--frame={fr}",
                     "--gl=swangle", "--scale=0.5", f"--log={args.log}",
                     f"--chromium-flags={CHROMIUM_FLAGS}",
                 ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -222,7 +222,7 @@ def main():
         scale = args.scale if args.scale is not None else 1.0
         out = os.path.join("out", f"{slug}.mp4")
         cmd = REMOTION + [
-            "render", BUNDLE, "RobloxShort", out,
+            "render", BUNDLE, "MotionBlocks", out,
             "--gl=swangle",
             f"--chromium-flags={CHROMIUM_FLAGS}",
             f"--concurrency={conc}",

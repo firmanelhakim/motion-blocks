@@ -277,7 +277,7 @@ same as the kit characters (BoltBoy Arm/Leg): armL/legL drive the −x limb
   framings sit lower (lookAt y ~2.8, camera y ~4 instead of 4.2/5).
 - `R6KitCheck` composition (inputProps preset + clip + side) verifies any
   preset doing any kit clip. Story-pipeline wiring (a `clip` field in
-  story files) is NOT done — `RobloxShortComposition` still drives actors
+  story files) is NOT done — `MotionBlocksComposition` still drives actors
   by `anim` only.
 
 ## Circle showcase (the maintainer, 2026-11-21)
@@ -298,7 +298,7 @@ circle — he lives in the separate Mars project, not the engine kit.
 
 ## Kit characters in story Shorts (the maintainer, 2026-11-21 — "Wire in BlockBoy first")
 
-The story pipeline (`RobloxShortComposition`) renders R6 presets by
+The story pipeline (`MotionBlocksComposition`) renders R6 presets by
 default, but a cast entry can now point at a kit character instead:
 `{"kit": "boltboy"}`. The composition checks `kitForActor(charId, cast)`
 first; when it returns a kit id it renders that kit component

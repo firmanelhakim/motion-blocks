@@ -121,7 +121,7 @@ const Arm: React.FC<{side: 1 | -1; p: V3}> = ({side, p}) => (
     {/* sleeve */}
     <RBox size={[0.95, 1.5, 0.95]} color={COLORS.hoodie} position={[0, -0.75, 0]} radius={0.14} />
     <RBox size={[1.0, 0.2, 1.0]} color={COLORS.hoodieDark} position={[0, -1.45, 0]} radius={0.06} />
-    {/* Roblox-style hand: the plain skin-coloured end of the arm block, same width, no fingers or thumb */}
+    {/* blocky 3D hand: the plain skin-coloured end of the arm block, same width, no fingers or thumb */}
     <RBox size={[0.9, 0.62, 0.9]} color={COLORS.skin} position={[0, -1.86, 0]} radius={0.07} rough={0.55} />
   </group>
 );

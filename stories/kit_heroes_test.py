@@ -1,6 +1,6 @@
 """KIT HEROES TEST — all four kit characters lead a story scene.
 Verifies CasualMan, WingedBoy and ClassicNoob render through the story
-pipeline (RobloxShortComposition) the same way BoltBoy does.
+pipeline (MotionBlocksComposition) the same way BoltBoy does.
 Run: python scripts/make_short.py stories/kit_heroes_test.py --stills
 (TEST ONLY — do not schedule or publish.)
 """
