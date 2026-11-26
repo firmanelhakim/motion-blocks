@@ -89,6 +89,8 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
+      - name: Install ffmpeg (not on the stock runner image; render.mjs assembles with it)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       - name: Load the no_friction fixture story
         run: cp tests/fixtures/no_friction/currentStory.ts src/story/currentStory.ts
       - uses: actions/download-artifact@v4
@@ -122,6 +124,8 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+      - name: Install ffmpeg (concat + mux + ffprobe need it)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       - uses: actions/download-artifact@v4
         with:
           pattern: segment-*
