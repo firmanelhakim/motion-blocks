@@ -137,7 +137,7 @@ jobs:
           for i in 01 02 03 04 05 06 07 08 09 10; do echo "file 'segments/segment-$i.mp4'"; done > concat.txt
           ffmpeg -y -f concat -safe 0 -i concat.txt -c copy video-only.mp4
           ffmpeg -y -i video-only.mp4 -i tests/fixtures/no_friction/soundtrack.wav \
-            -c:v copy -c:a aac -b:a 192k -shortest no_friction-actions.mp4
+            -c:v copy -c:a aac -b:a 192k no_friction-actions.mp4
       - name: Verify the stitched video
         run: |
           frames=$(ffprobe -v error -count_frames -select_streams v:0 \
