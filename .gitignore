@@ -1,0 +1,62 @@
+# =============================================================================
+# roblox-shorts-engine — what stays out of git
+# =============================================================================
+
+# Dependencies — reinstall with `npm ci` (never committed)
+node_modules/
+
+# Render outputs — generated, never committed
+out/
+dist/
+*.mp4
+*.mov
+
+# Remotion bundle dirs (rebuilt on every render; bundleToDir writes out/bundle-story)
+out/bundle/
+out/bundle-story/
+
+# Large assets — synced separately, never in git
+#   public/ (music, ~167M) — needed by the story pipeline (make_short.py),
+#     not by the kit demos. Sync via shared drive, not git. A fresh clone
+#     has NO public/music/, so make_short.py cannot build a soundtrack
+#     (see README).
+#   models/ (~338M, Kokoro TTS voice models) — same, synced separately.
+#   references/ (~352M) — reference material, kept out entirely.
+# Exception (2026-11-26): the two small fixture files in public/ ARE
+# tracked — public/soundtrack.wav + public/kokoro-cues.json belong to the
+# committed ice_floats story so a fresh clone can render with audio.
+# The pattern below ignores everything else under public/ (incl. music/).
+public/*
+!public/soundtrack.wav
+!public/kokoro-cues.json
+!public/README.md
+models/
+references/
+
+# Generated story data — built by scripts/make_short.py from stories/*.py.
+# NOTE (cleanup 2026-11-26): the old .gitignore excluded
+# src/story/currentStory.ts, which meant a fresh clone had NO story file
+# and the bundle failed to build. The file is now TRACKED (the committed
+# copy is the ice_floats story, 1742 frames) so the repo builds out of
+# the box. make_short.py overwrites it on every story build — that is
+# expected; do not hand-edit it.
+# (No entry for it here on purpose.)
+
+# Python — virtualenvs, bytecode, local tooling
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs and local state
+*.log
+render.log
+.DS_Store
+Thumbs.db
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
+*~

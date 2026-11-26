@@ -1,0 +1,17 @@
+# Python dependencies for the story pipeline (scripts/make_short.py).
+# Install into a venv — the system python has no Kokoro:
+#   python3 -m venv venv
+#   venv/bin/pip install -r requirements.txt
+# Then sync models/kokoro-v1.0.onnx + models/voices-v1.0.bin (338 MB,
+# NOT in git) and public/music/ from the shared drive.
+#
+# Pinned versions are the ones recorded in the old README. Pillow and
+# scipy were required by the code but missing from the old docs:
+# Pillow is imported by make_short.py (contact sheets) and scipy by
+# scripts/make_music_*.py — both are unpinned here because no version
+# was ever recorded; pin them once a working pair is confirmed.
+kokoro-onnx==0.6.1
+onnxruntime==1.32.0
+numpy
+Pillow
+scipy

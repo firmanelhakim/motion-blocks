@@ -1,0 +1,604 @@
+{
+  "durationSeconds": 58.06,
+  "durationInFrames": 1742,
+  "beatTimings": {
+    "b1": {
+      "startSec": 0.15,
+      "endSec": 1.145,
+      "startFrame": 4,
+      "endFrame": 34,
+      "text": "Why does ice float?"
+    },
+    "b2": {
+      "startSec": 1.245,
+      "endSec": 6.319,
+      "startFrame": 37,
+      "endFrame": 190,
+      "text": "In this kitchen, Noob drops an ice cube into a glass of water. And it does not sink. It floats."
+    },
+    "b3": {
+      "startSec": 6.399,
+      "endSec": 10.939,
+      "startFrame": 192,
+      "endFrame": 328,
+      "text": "That is strange. Ice is solid water. And solid things usually sink to the bottom."
+    },
+    "b4": {
+      "startSec": 11.039,
+      "endSec": 16.522,
+      "startFrame": 331,
+      "endFrame": 496,
+      "text": "Here is the secret. When water freezes, it spreads out. It takes up more room than the water it came from."
+    },
+    "b5": {
+      "startSec": 16.622,
+      "endSec": 21.65,
+      "startFrame": 499,
+      "endFrame": 650,
+      "text": "So the same water gets bigger, and lighter for its size. Ice is less dense than liquid water."
+    },
+    "b6": {
+      "startSec": 21.75,
+      "endSec": 25.16,
+      "startFrame": 653,
+      "endFrame": 755,
+      "text": "Less dense means it floats. Like a beach ball floats on a swimming pool."
+    },
+    "b7": {
+      "startSec": 25.26,
+      "endSec": 29.549,
+      "startFrame": 758,
+      "endFrame": 886,
+      "text": "Look closely. Only a little bit of the ice sticks out. Most of it hides under the water."
+    },
+    "b8": {
+      "startSec": 29.649,
+      "endSec": 33.73,
+      "startFrame": 889,
+      "endFrame": 1012,
+      "text": "And that floating ice saves lives. In winter, the top of a lake freezes first."
+    },
+    "b9": {
+      "startSec": 33.83,
+      "endSec": 37.935,
+      "startFrame": 1015,
+      "endFrame": 1138,
+      "text": "The ice floats and makes a roof over the lake. Underneath, the water stays liquid."
+    },
+    "b9b": {
+      "startSec": 38.035,
+      "endSec": 43.134,
+      "startFrame": 1141,
+      "endFrame": 1294,
+      "text": "If ice sank instead, lakes would freeze from the bottom up, and the fish would have nowhere left to swim."
+    },
+    "b10": {
+      "startSec": 43.234,
+      "endSec": 47.381,
+      "startFrame": 1297,
+      "endFrame": 1421,
+      "text": "But the ice floats. So the fish keep swimming, safe under the ice, all winter long."
+    },
+    "b11": {
+      "startSec": 47.481,
+      "endSec": 52.833,
+      "startFrame": 1424,
+      "endFrame": 1585,
+      "text": "So ice floats because frozen water is lighter for its size. And that is why fish survive the winter."
+    },
+    "b12": {
+      "startSec": 52.933,
+      "endSec": 57.36,
+      "startFrame": 1588,
+      "endFrame": 1721,
+      "text": "Next time you hear ice clink in a glass, remember: you are watching water break its own rule."
+    }
+  },
+  "captions": [
+    {
+      "startFrame": 4,
+      "endFrame": 17,
+      "text": "Why does"
+    },
+    {
+      "startFrame": 18,
+      "endFrame": 33,
+      "text": "ice float?"
+    },
+    {
+      "startFrame": 37,
+      "endFrame": 49,
+      "text": "In this"
+    },
+    {
+      "startFrame": 50,
+      "endFrame": 71,
+      "text": "kitchen, Noob"
+    },
+    {
+      "startFrame": 72,
+      "endFrame": 92,
+      "text": "drops an ice"
+    },
+    {
+      "startFrame": 93,
+      "endFrame": 108,
+      "text": "cube into"
+    },
+    {
+      "startFrame": 109,
+      "endFrame": 120,
+      "text": "a glass"
+    },
+    {
+      "startFrame": 121,
+      "endFrame": 136,
+      "text": "of water."
+    },
+    {
+      "startFrame": 137,
+      "endFrame": 155,
+      "text": "And it does"
+    },
+    {
+      "startFrame": 156,
+      "endFrame": 171,
+      "text": "not sink."
+    },
+    {
+      "startFrame": 172,
+      "endFrame": 189,
+      "text": "It floats."
+    },
+    {
+      "startFrame": 192,
+      "endFrame": 220,
+      "text": "That is strange."
+    },
+    {
+      "startFrame": 221,
+      "endFrame": 242,
+      "text": "Ice is solid"
+    },
+    {
+      "startFrame": 243,
+      "endFrame": 260,
+      "text": "water. And"
+    },
+    {
+      "startFrame": 261,
+      "endFrame": 282,
+      "text": "solid things"
+    },
+    {
+      "startFrame": 283,
+      "endFrame": 304,
+      "text": "usually sink"
+    },
+    {
+      "startFrame": 305,
+      "endFrame": 314,
+      "text": "to the"
+    },
+    {
+      "startFrame": 315,
+      "endFrame": 327,
+      "text": "bottom."
+    },
+    {
+      "startFrame": 331,
+      "endFrame": 349,
+      "text": "Here is the"
+    },
+    {
+      "startFrame": 350,
+      "endFrame": 369,
+      "text": "secret. When"
+    },
+    {
+      "startFrame": 370,
+      "endFrame": 393,
+      "text": "water freezes,"
+    },
+    {
+      "startFrame": 394,
+      "endFrame": 410,
+      "text": "it spreads"
+    },
+    {
+      "startFrame": 411,
+      "endFrame": 432,
+      "text": "out. It takes"
+    },
+    {
+      "startFrame": 433,
+      "endFrame": 444,
+      "text": "up more"
+    },
+    {
+      "startFrame": 445,
+      "endFrame": 459,
+      "text": "room than"
+    },
+    {
+      "startFrame": 460,
+      "endFrame": 474,
+      "text": "the water"
+    },
+    {
+      "startFrame": 475,
+      "endFrame": 486,
+      "text": "it came"
+    },
+    {
+      "startFrame": 487,
+      "endFrame": 495,
+      "text": "from."
+    },
+    {
+      "startFrame": 499,
+      "endFrame": 508,
+      "text": "So the"
+    },
+    {
+      "startFrame": 509,
+      "endFrame": 526,
+      "text": "same water"
+    },
+    {
+      "startFrame": 527,
+      "endFrame": 547,
+      "text": "gets bigger,"
+    },
+    {
+      "startFrame": 548,
+      "endFrame": 567,
+      "text": "and lighter"
+    },
+    {
+      "startFrame": 568,
+      "endFrame": 579,
+      "text": "for its"
+    },
+    {
+      "startFrame": 580,
+      "endFrame": 595,
+      "text": "size. Ice"
+    },
+    {
+      "startFrame": 596,
+      "endFrame": 608,
+      "text": "is less"
+    },
+    {
+      "startFrame": 609,
+      "endFrame": 625,
+      "text": "dense than"
+    },
+    {
+      "startFrame": 626,
+      "endFrame": 649,
+      "text": "liquid water."
+    },
+    {
+      "startFrame": 653,
+      "endFrame": 667,
+      "text": "Less dense"
+    },
+    {
+      "startFrame": 668,
+      "endFrame": 691,
+      "text": "means it floats."
+    },
+    {
+      "startFrame": 692,
+      "endFrame": 710,
+      "text": "Like a beach"
+    },
+    {
+      "startFrame": 711,
+      "endFrame": 726,
+      "text": "ball floats"
+    },
+    {
+      "startFrame": 727,
+      "endFrame": 746,
+      "text": "on a swimming"
+    },
+    {
+      "startFrame": 747,
+      "endFrame": 754,
+      "text": "pool."
+    },
+    {
+      "startFrame": 758,
+      "endFrame": 777,
+      "text": "Look closely."
+    },
+    {
+      "startFrame": 778,
+      "endFrame": 798,
+      "text": "Only a little"
+    },
+    {
+      "startFrame": 799,
+      "endFrame": 814,
+      "text": "bit of the"
+    },
+    {
+      "startFrame": 815,
+      "endFrame": 830,
+      "text": "ice sticks"
+    },
+    {
+      "startFrame": 831,
+      "endFrame": 844,
+      "text": "out. Most"
+    },
+    {
+      "startFrame": 845,
+      "endFrame": 862,
+      "text": "of it hides"
+    },
+    {
+      "startFrame": 863,
+      "endFrame": 876,
+      "text": "under the"
+    },
+    {
+      "startFrame": 877,
+      "endFrame": 885,
+      "text": "water."
+    },
+    {
+      "startFrame": 889,
+      "endFrame": 902,
+      "text": "And that"
+    },
+    {
+      "startFrame": 903,
+      "endFrame": 922,
+      "text": "floating ice"
+    },
+    {
+      "startFrame": 923,
+      "endFrame": 943,
+      "text": "saves lives."
+    },
+    {
+      "startFrame": 944,
+      "endFrame": 960,
+      "text": "In winter,"
+    },
+    {
+      "startFrame": 961,
+      "endFrame": 972,
+      "text": "the top"
+    },
+    {
+      "startFrame": 973,
+      "endFrame": 987,
+      "text": "of a lake"
+    },
+    {
+      "startFrame": 988,
+      "endFrame": 1011,
+      "text": "freezes first."
+    },
+    {
+      "startFrame": 1015,
+      "endFrame": 1025,
+      "text": "The ice"
+    },
+    {
+      "startFrame": 1026,
+      "endFrame": 1041,
+      "text": "floats and"
+    },
+    {
+      "startFrame": 1042,
+      "endFrame": 1061,
+      "text": "makes a roof"
+    },
+    {
+      "startFrame": 1062,
+      "endFrame": 1074,
+      "text": "over the"
+    },
+    {
+      "startFrame": 1075,
+      "endFrame": 1101,
+      "text": "lake. Underneath,"
+    },
+    {
+      "startFrame": 1102,
+      "endFrame": 1116,
+      "text": "the water"
+    },
+    {
+      "startFrame": 1117,
+      "endFrame": 1137,
+      "text": "stays liquid."
+    },
+    {
+      "startFrame": 1141,
+      "endFrame": 1150,
+      "text": "If ice"
+    },
+    {
+      "startFrame": 1151,
+      "endFrame": 1170,
+      "text": "sank instead,"
+    },
+    {
+      "startFrame": 1171,
+      "endFrame": 1188,
+      "text": "lakes would"
+    },
+    {
+      "startFrame": 1189,
+      "endFrame": 1205,
+      "text": "freeze from"
+    },
+    {
+      "startFrame": 1206,
+      "endFrame": 1221,
+      "text": "the bottom"
+    },
+    {
+      "startFrame": 1222,
+      "endFrame": 1232,
+      "text": "up, and"
+    },
+    {
+      "startFrame": 1233,
+      "endFrame": 1245,
+      "text": "the fish"
+    },
+    {
+      "startFrame": 1246,
+      "endFrame": 1261,
+      "text": "would have"
+    },
+    {
+      "startFrame": 1262,
+      "endFrame": 1280,
+      "text": "nowhere left"
+    },
+    {
+      "startFrame": 1281,
+      "endFrame": 1293,
+      "text": "to swim."
+    },
+    {
+      "startFrame": 1297,
+      "endFrame": 1307,
+      "text": "But the"
+    },
+    {
+      "startFrame": 1308,
+      "endFrame": 1325,
+      "text": "ice floats."
+    },
+    {
+      "startFrame": 1326,
+      "endFrame": 1335,
+      "text": "So the"
+    },
+    {
+      "startFrame": 1336,
+      "endFrame": 1350,
+      "text": "fish keep"
+    },
+    {
+      "startFrame": 1351,
+      "endFrame": 1373,
+      "text": "swimming, safe"
+    },
+    {
+      "startFrame": 1374,
+      "endFrame": 1388,
+      "text": "under the"
+    },
+    {
+      "startFrame": 1389,
+      "endFrame": 1401,
+      "text": "ice, all"
+    },
+    {
+      "startFrame": 1402,
+      "endFrame": 1420,
+      "text": "winter long."
+    },
+    {
+      "startFrame": 1424,
+      "endFrame": 1434,
+      "text": "So ice"
+    },
+    {
+      "startFrame": 1435,
+      "endFrame": 1458,
+      "text": "floats because"
+    },
+    {
+      "startFrame": 1459,
+      "endFrame": 1479,
+      "text": "frozen water"
+    },
+    {
+      "startFrame": 1480,
+      "endFrame": 1497,
+      "text": "is lighter"
+    },
+    {
+      "startFrame": 1498,
+      "endFrame": 1509,
+      "text": "for its"
+    },
+    {
+      "startFrame": 1510,
+      "endFrame": 1525,
+      "text": "size. And"
+    },
+    {
+      "startFrame": 1526,
+      "endFrame": 1544,
+      "text": "that is why"
+    },
+    {
+      "startFrame": 1545,
+      "endFrame": 1565,
+      "text": "fish survive"
+    },
+    {
+      "startFrame": 1566,
+      "endFrame": 1584,
+      "text": "the winter."
+    },
+    {
+      "startFrame": 1588,
+      "endFrame": 1601,
+      "text": "Next time"
+    },
+    {
+      "startFrame": 1602,
+      "endFrame": 1614,
+      "text": "you hear"
+    },
+    {
+      "startFrame": 1615,
+      "endFrame": 1628,
+      "text": "ice clink"
+    },
+    {
+      "startFrame": 1629,
+      "endFrame": 1645,
+      "text": "in a glass,"
+    },
+    {
+      "startFrame": 1646,
+      "endFrame": 1665,
+      "text": "remember: you"
+    },
+    {
+      "startFrame": 1666,
+      "endFrame": 1684,
+      "text": "are watching"
+    },
+    {
+      "startFrame": 1685,
+      "endFrame": 1701,
+      "text": "water break"
+    },
+    {
+      "startFrame": 1702,
+      "endFrame": 1712,
+      "text": "its own"
+    },
+    {
+      "startFrame": 1713,
+      "endFrame": 1720,
+      "text": "rule."
+    }
+  ]
+}
