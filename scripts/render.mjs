@@ -129,7 +129,7 @@ async function main() {
       'Usage:',
       '  node scripts/render.mjs still  --comp <id> --frames 0,30 --out-dir <dir> [--pattern frame-{frame:4}.png] [--scale 0.5] [--bundle out/bundle]',
       '  node scripts/render.mjs range  --comp <id> --start 0 --end 100 --out-dir <dir> [--pattern frame-{frame}.png] [--port 3050]',
-      '  node scripts/render.mjs story [slug|stories/<slug>.py] [--start 0] [--end <last>] [--out out/<slug>.mp4] [--stills-dir out/stills/<slug>] [--audio public/soundtrack.wav|--no-audio] [--port 3051] [--overwrite] [--stills-only] [--assemble-only]',
+      '  node scripts/render.mjs story [slug|stories/<slug>.py] [--start 0] [--end <last>] [--out out/<slug>.mp4] [--stills-dir out/stills/<slug>] [--audio public/soundtrack.wav|--no-audio] [--port 3051] [--overwrite] [--stills-only] [--assemble-only] [--image-format png|jpeg] [--jpeg-quality 90]',
       '  node scripts/render.mjs preset <name> [--preview] [--port 3050] [--log error]',
       '  node scripts/render.mjs bundle --out-dir out/bundle-shared',
       '  node scripts/render.mjs list',
@@ -141,6 +141,13 @@ async function main() {
       'command verifies the loaded title matches stories/<slug>.py before rendering.',
       'A missing soundtrack is an error unless --no-audio is passed.',
       'Stills are skipped when they already exist (resume); pass --overwrite to re-render.',
+      'Stills are lossless PNG by default; --image-format jpeg writes .jpg',
+      'stills instead (default quality 90, --jpeg-quality 1-100) — ~3-5x',
+      'smaller per frame at quality 90 (measured on ice_floats), at a',
+      'small lossy cost the final x264 encode mostly hides. The format',
+      'flows into still filenames, renderStill,',
+      'and the ffmpeg assembly glob; --assemble-only infers it from the',
+      'stills on disk when the flag is not given.',
       'Without --bundle, each run bundles into its own out/bundle-story-p<pid> dir;',
       'parallel runs must never share one bundle dir (pass --bundle out/bundle-shared',
       'to share a bundle built once instead).',
@@ -267,6 +274,20 @@ async function main() {
       console.error(`Invalid --end: ${flags.end} (must be an integer >= --start ${start})`);
       process.exit(1);
     }
+    // Still image format for this render. PNG is the lossless default;
+    // --image-format jpeg writes .jpg stills (quality 90 default) for
+    // the disk-saving experiment. `jpg` is accepted as an alias.
+    let imageFormat = String(flags['image-format'] ?? 'png').toLowerCase();
+    if (imageFormat === 'jpg') imageFormat = 'jpeg';
+    if (imageFormat !== 'png' && imageFormat !== 'jpeg') {
+      console.error(`Invalid --image-format: ${flags['image-format']} (must be png or jpeg)`);
+      process.exit(1);
+    }
+    const jpegQuality = flags['jpeg-quality'] !== undefined ? Number(flags['jpeg-quality']) : 90;
+    if (!Number.isInteger(jpegQuality) || jpegQuality < 1 || jpegQuality > 100) {
+      console.error(`Invalid --jpeg-quality: ${flags['jpeg-quality']} (must be an integer 1-100)`);
+      process.exit(1);
+    }
     const assembleOnly = Boolean(flags['assemble-only']);
     const stillsOnly = Boolean(flags['stills-only']);
     if (assembleOnly) {
@@ -274,11 +295,19 @@ async function main() {
       // fps (30); the range was validated above and missing stills fail
       // loudly inside assembleStillsToVideo.
       const stillsDirA = path.resolve(String(flags['stills-dir'] || path.join('out', 'stills', slug)));
-      // No --end given: assemble every still on disk (max frame-*.png).
+      // No --end given: assemble every still on disk (max frame-*.<ext>).
       let endA = end;
+      // No --image-format given: infer the format from the stills on
+      // disk (.jpg present wins, else PNG) so a JPEG range re-assembles
+      // without the flag.
+      let formatA = imageFormat;
+      if (flags['image-format'] === undefined && fs.existsSync(stillsDirA)) {
+        const names = fs.readdirSync(stillsDirA);
+        if (names.some((n) => /\.jpg$/.test(n))) formatA = 'jpeg';
+      }
       if (endA === -1) {
         const present = fs.existsSync(stillsDirA)
-          ? fs.readdirSync(stillsDirA).map((n) => /^frame-(\d+)\.png$/.exec(n)?.[1]).filter(Boolean).map(Number)
+          ? fs.readdirSync(stillsDirA).map((n) => /^frame-(\d+)\.(?:png|jpg)$/.exec(n)?.[1]).filter(Boolean).map(Number)
           : [];
         if (!present.length) {
           console.error(`--assemble-only: no --end given and no stills in ${stillsDirA} to derive one from.`);
@@ -290,7 +319,7 @@ async function main() {
       const outA = path.resolve(String(flags.out || path.join('out', `${slug}-f${start}-${endA}.mp4`)));
       verifyLoadedStory(slug);
       const audioA = resolveAudio(flags);
-      const result = await assembleStillsToVideo({ stillsDir: stillsDirA, start, frames: framesA, fps: STORY_VIDEO.fps, audio: audioA, out: outA });
+      const result = await assembleStillsToVideo({ stillsDir: stillsDirA, start, frames: framesA, fps: STORY_VIDEO.fps, audio: audioA, out: outA, imageFormat: formatA });
       console.log(`story video done: ${result.out}`);
       console.log(`  frames: ${result.frames} (expected ${framesA}), duration: ${result.duration.toFixed(2)}s (expected ${(framesA / STORY_VIDEO.fps).toFixed(2)}s), audio: ${result.hasAudio ? 'present' : 'NONE — video-only'}`);
       return;
@@ -341,7 +370,7 @@ async function main() {
         id: 'MotionBlocks',
         frame: f,
         inputProps,
-        output: path.join(stillsDir, stillsFileName(f)),
+        output: path.join(stillsDir, stillsFileName(f, imageFormat)),
         skipIfExists: !flags.overwrite,
       });
     }
@@ -350,15 +379,18 @@ async function main() {
       serveUrl,
       items,
       opts,
+      imageFormat,
+      jpegQuality,
       onDone: (item, stats) =>
         console.log(`still ok -> ${item.frame} (${stats.rendered} done, ${((Date.now() - t0) / 1000).toFixed(1)}s)`),
     });
-    console.log(`stills ${start}-${endF} done: ${rendered} rendered, ${skipped} skipped (resume), ${((Date.now() - t0) / 1000).toFixed(1)}s total`);
+    console.log(`stills ${start}-${endF} done: ${rendered} rendered, ${skipped} skipped (resume), ${((Date.now() - t0) / 1000).toFixed(1)}s total (format ${imageFormat}${imageFormat === 'jpeg' ? ` q${jpegQuality}` : ''})`);
     if (stillsOnly) {
-      console.log(`stills-only: stills in ${stillsDir}; assemble later with: node scripts/render.mjs story ${slug} --start ${start} --end ${endF} --assemble-only --out ${out}`);
+      const fmtFlags = imageFormat === 'jpeg' ? ` --image-format jpeg --jpeg-quality ${jpegQuality}` : '';
+      console.log(`stills-only: stills in ${stillsDir}; assemble later with: node scripts/render.mjs story ${slug} --start ${start} --end ${endF} --assemble-only --out ${out}${fmtFlags}`);
       return;
     }
-    const result = await assembleStillsToVideo({ stillsDir, start, frames, fps, audio, out });
+    const result = await assembleStillsToVideo({ stillsDir, start, frames, fps, audio, out, imageFormat });
     console.log(`story video done: ${result.out}`);
     console.log(`  frames: ${result.frames} (expected ${frames}), duration: ${result.duration.toFixed(2)}s (expected ${(frames / fps).toFixed(2)}s), audio: ${result.hasAudio ? 'present' : 'NONE — video-only'}`);
     return;

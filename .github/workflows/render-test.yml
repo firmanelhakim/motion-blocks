@@ -1,15 +1,20 @@
 # GitHub Actions parallel render test — no_friction (1,434 frames, 47.80 s)
+# JPEG-INTERMEDIATES TEST: shards render .jpg stills (quality 90) instead
+# of lossless PNG, to measure wall-clock, disk per frame, and pixel
+# difference against the PNG ground truth.
 #
 # What it measures: wall-clock time and billed minutes for rendering the
 # no_friction Short in 10 parallel shards on public-repo runners
 # (ubuntu-latest: 4 vCPU / 16 GB), plus whether the stitched result
-# matches the v4 ground truth (fix3/no_friction-v4.mp4, 1,434 frames).
+# matches the run-4 Eevee PNG result (commit 3639291, ~29m 51s wall
+# clock) — the PNG baseline for the current (Eevee) code.
 #
 # How it works:
 #   bundle  — checkout, npm ci, load the no_friction fixture story,
 #             build the Remotion bundle ONCE, upload it as an artifact.
 #   render  — 10 shards in parallel. Each downloads the shared bundle
-#             and renders one frame range to a segment MP4 (video only).
+#             and renders one frame range to a segment MP4 (video only),
+#             writing JPEG stills (--image-format jpeg --jpeg-quality 90).
 #   stitch  — downloads the 10 segments, concatenates them with ffmpeg
 #             (no re-encode), muxes the real soundtrack once, and verifies
 #             exactly 1,434 frames / 47.80 s / audio present.
@@ -103,8 +108,18 @@ jobs:
           node scripts/render.mjs story ${{ inputs.story }} \
             --start ${{ matrix.start }} --end ${{ matrix.end }} \
             --out segment-${{ matrix.shard }}.mp4 \
+            --image-format jpeg --jpeg-quality 90 \
             --no-audio --bundle out/bundle-shared --port 3050
           echo "shard_seconds=$(( $(date +%s) - start ))"
+      - name: Report stills disk usage (JPEG experiment)
+        run: |
+          dir="out/stills/${{ inputs.story }}"
+          count=$(ls "$dir" | wc -l)
+          bytes=$(du -sb "$dir" | cut -f1)
+          echo "stills_dir=$dir"
+          echo "stills_count=$count"
+          echo "stills_bytes_total=$bytes"
+          echo "still_bytes_avg=$(( bytes / count ))"
       - name: Verify segment
         run: |
           ffprobe -v error -count_frames \

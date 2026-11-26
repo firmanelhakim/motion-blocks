@@ -222,8 +222,63 @@ export const STORY_VIDEO = Object.freeze({
   audioBitrate: '160k',
 });
 
-export function stillsFileName(frame) {
-  return `frame-${String(frame).padStart(5, '0')}.png`;
+/**
+ * Still image format for the story pipeline. PNG is the lossless
+ * default; `jpeg` writes .jpg stills (quality set at the renderStill
+ * call) — the disk-saving experiment: JPEGs run ~3–5x smaller per
+ * frame than PNG at quality 90 (measured on ice_floats), at a small
+ * lossy cost the final x264 encode mostly hides. Extension is `jpg`
+ * (not `jpeg`) so ffmpeg's image2 demuxer and the `--assemble-only`
+ * glob see a normal suffix.
+ */
+export const STILL_IMAGE_FORMATS = Object.freeze(['png', 'jpeg']);
+
+export function stillsFileName(frame, imageFormat = 'png') {
+  const ext = imageFormat === 'jpeg' ? 'jpg' : 'png';
+  return `frame-${String(frame).padStart(5, '0')}.${ext}`;
+}
+
+/** JPEG size from the first SOF0/1/2 marker (header scan, no decode). */
+function readJpegSize(file) {
+  const buf = fs.readFileSync(file);
+  if (buf.length < 4 || buf[0] !== 0xff || buf[1] !== 0xd8) return null; // not SOI
+  let i = 2;
+  while (i + 1 < buf.length) {
+    if (buf[i] !== 0xff) return null; // not a marker
+    let marker = buf[i + 1];
+    while (marker === 0xff) {
+      i++;
+      marker = buf[i + 1];
+    }
+    if (marker === 0x00) {
+      i += 2; // stuffed byte, not a marker
+      continue;
+    }
+    // Standalone markers carry no length field.
+    if (marker === 0xd8 || marker === 0xd9 || (marker >= 0xd0 && marker <= 0xd7) || marker === 0x01) {
+      i += 2;
+      continue;
+    }
+    if (i + 4 > buf.length) return null;
+    const len = buf.readUInt16BE(i + 2);
+    if (len < 2 || i + 2 + len > buf.length) return null;
+    if (marker === 0xc0 || marker === 0xc1 || marker === 0xc2) {
+      // SOF segment: precision(1), height(2), width(2), components(1).
+      if (len < 8) return null;
+      const height = buf.readUInt16BE(i + 5);
+      const width = buf.readUInt16BE(i + 7);
+      if (!Number.isFinite(width) || !Number.isFinite(height) || width < 1 || height < 1) return null;
+      return { width, height };
+    }
+    if (marker === 0xda) return null; // SOS: scan data starts, no SOF after this
+    i += 2 + len;
+  }
+  return null;
+}
+
+/** Still size for either intermediate format: PNG header or JPEG SOF. */
+function readStillSize(file) {
+  return readPngSize(file) ?? readJpegSize(file);
 }
 
 /** PNG signature (first 8 bytes) + IHDR width/height. */
@@ -254,6 +309,7 @@ export async function assembleStillsToVideo({
   fps = STORY_VIDEO.fps,
   audio = null,
   out,
+  imageFormat = 'png',
 }) {
   if (!frames || frames < 1) {
     throw new Error('assembleStillsToVideo: frames must be >= 1');
@@ -261,7 +317,7 @@ export async function assembleStillsToVideo({
   // Fail loudly on a missing still instead of silently producing a short video.
   const missing = [];
   for (let f = start; f < start + frames; f++) {
-    if (!fs.existsSync(path.join(stillsDir, stillsFileName(f)))) {
+    if (!fs.existsSync(path.join(stillsDir, stillsFileName(f, imageFormat)))) {
       missing.push(f);
     }
   }
@@ -272,17 +328,17 @@ export async function assembleStillsToVideo({
     );
   }
   // Sampled still checks (first, middle, last): every sampled still must
-  // be a valid PNG and share one resolution, and must not be a blank
-  // (near-black / near-white) frame — the known video-renderer glitch
-  // mode. This is a cheap gate, not a full-frame review: only 3 frames
-  // are sampled, so a bad frame elsewhere still needs an eye check.
+  // be a valid still (PNG or JPEG) and share one resolution, and must not
+  // be a blank (near-black / near-white) frame — the known video-renderer
+  // glitch mode. This is a cheap gate, not a full-frame review: only 3
+  // frames are sampled, so a bad frame elsewhere still needs an eye check.
   const sampleFrames = [...new Set([start, start + Math.floor(frames / 2), start + frames - 1])];
   let refSize = null;
   for (const f of sampleFrames) {
-    const file = path.join(stillsDir, stillsFileName(f));
-    const size = readPngSize(file);
+    const file = path.join(stillsDir, stillsFileName(f, imageFormat));
+    const size = readStillSize(file);
     if (!size) {
-      throw new Error(`assembleStillsToVideo: sampled still ${file} is not a valid PNG — re-render the range`);
+      throw new Error(`assembleStillsToVideo: sampled still ${file} is not a valid PNG or JPEG still — re-render the range`);
     }
     if (!refSize) refSize = size;
     if (size.width !== refSize.width || size.height !== refSize.height) {
@@ -299,7 +355,8 @@ export async function assembleStillsToVideo({
     }
   }
   const duration = frames / fps;
-  const inputPattern = path.join(stillsDir, 'frame-%05d.png');
+  const ext = imageFormat === 'jpeg' ? 'jpg' : 'png';
+  const inputPattern = path.join(stillsDir, `frame-%05d.${ext}`);
   const args = [
     '-y', '-v', 'error',
     '-framerate', String(fps),
@@ -381,8 +438,12 @@ export function formatFrameName(pattern, frame) {
  * Render multiple stills using a single warm Chromium browser instance.
  * Each item: `{ id, frame, output, inputProps?, skipIfExists? }`.
  *
+ * `imageFormat` (`'png'` default, or `'jpeg'`) is passed through to
+ * renderStill; `jpegQuality` (1–100) only applies to JPEG. The resume
+ * fingerprint accepts either format (PNG header or JPEG SOF).
+ *
  * Resume fingerprint: a still is only skipped when it exists, is
- * non-empty, and passes a PNG header/size sanity check. A zero-byte or
+ * non-empty, and passes a still header/size sanity check. A zero-byte or
  * corrupt still is re-rendered instead of trusted. NOTE: this is NOT a
  * pixel-blank check — decoding every still to test for blank frames
  * would cost a full image decode per frame on every resume; the
@@ -393,6 +454,8 @@ export async function renderStillBatch({
   items,
   opts,
   onDone,
+  imageFormat = 'png',
+  jpegQuality,
 }) {
   const compCache = new Map();
   return withBrowser(opts, async (browser) => {
@@ -403,7 +466,7 @@ export async function renderStillBatch({
       if (item.skipIfExists && fs.existsSync(item.output)) {
         let valid = false;
         try {
-          valid = fs.statSync(item.output).size > 0 && readPngSize(item.output) !== null;
+          valid = fs.statSync(item.output).size > 0 && readStillSize(item.output) !== null;
         } catch {
           valid = false;
         }
@@ -435,6 +498,10 @@ export async function renderStillBatch({
         frame: item.frame,
         output: item.output,
         puppeteerInstance: browser,
+        imageFormat,
+        // jpegQuality is only meaningful for JPEG; omit it for PNG so
+        // Remotion never sees a quality value on a lossless render.
+        ...(imageFormat === 'jpeg' ? { jpegQuality } : {}),
       });
       rendered++;
       if (onDone) onDone(item, { rendered, skipped });
