@@ -13,6 +13,8 @@ import { BlockyTRex } from './components/BlockyTRex';
 import { clipPose, ClipName, Pose } from './kit/kit';
 import { EnvironmentSwitch } from './environments/Environments';
 import { ShortsHUD } from './components/ShortsHUD';
+import { EeveeLook } from './components/EeveeLook';
+import { LOOK_EEVEE, EEVEE_LOOK, eeveeSkyColor } from './look';
 import { CURRENT_STORY } from './story/currentStory';
 import { CharacterLook, lookForActor, kitForActor, kitScaleForActor } from './characters/look';
 import { evaluateCharacterKeyframes, animStartFrame } from './story/keyframes';
@@ -131,36 +133,74 @@ export const MotionBlocksComposition: React.FC<{
   const exterior = LOCATION_INFO[currentScene.location]?.exterior ?? false;
   const overview = currentScene.location === 'town_overview';
   const skyColor = currentScene.skyColor || (currentScene.isNight ? '#090D16' : exterior ? '#38BDF8' : '#1E293B');
+  // v3: ACES-compensated day sky (identity unless Eevee is on in daytime).
+  const skyColorOut = eeveeSkyColor(skyColor, currentScene.isNight ?? false);
   const fogRange: [number, number] = overview ? [140, 360] : exterior ? [55, 190] : [26, 68];
 
   return (
-    <AbsoluteFill style={{ backgroundColor: skyColor }}>
+    <AbsoluteFill style={{ backgroundColor: skyColorOut }}>
       <ThreeCanvas
         width={width}
         height={height}
-        shadows
+        shadows={LOOK_EEVEE ? 'soft' : true}
         camera={{ fov: 46, near: 0.1, far: 500, position: [0, 5, 10] }}
       >
-        <color attach="background" args={[skyColor]} />
-        <fog attach="fog" args={[skyColor, fogRange[0], fogRange[1]]} />
+        <color attach="background" args={[skyColorOut]} />
+        <fog attach="fog" args={[skyColorOut, fogRange[0], fogRange[1]]} />
 
         {/* Dynamic Camera Rig */}
         <CameraRig cam={cam} />
 
-        {/* Studio-style lighting */}
+        {/* Studio-style lighting — Eevee look (src/look.ts) swaps in a
+            key/fill/rim rig with PCFSoft shadows; the PMREM environment
+            then carries the ambient, so ambient + hemisphere come down. */}
         <ambientLight
-          intensity={currentScene.isNight ? 0.55 : 0.85}
+          intensity={
+            currentScene.isNight
+              ? LOOK_EEVEE
+                ? EEVEE_LOOK.ambientNight
+                : 0.55
+              : LOOK_EEVEE
+                ? EEVEE_LOOK.ambientDay
+                : 0.85
+          }
           color={currentScene.isNight ? '#94A3B8' : '#F8FAFC'}
         />
-        <hemisphereLight args={['#FFFFFF', '#334155', 0.65]} position={[0, 25, 0]} />
+        <hemisphereLight
+          args={[
+            '#FFFFFF',
+            // v3: lighter ground when the Eevee look is on in daytime, so
+            // downward-facing surfaces (classroom ceiling underside) are
+            // not starved by the ambient cut. Night keeps the dark ground.
+            LOOK_EEVEE && !currentScene.isNight
+              ? EEVEE_LOOK.hemisphereGroundDay
+              : '#334155',
+            currentScene.isNight
+              ? LOOK_EEVEE
+                ? EEVEE_LOOK.hemisphereNight
+                : 0.65
+              : LOOK_EEVEE
+                ? EEVEE_LOOK.hemisphereDay
+                : 0.65,
+          ]}
+          position={[0, 25, 0]}
+        />
         <directionalLight
           key={overview ? 'sun-overview' : exterior ? 'sun-exterior' : 'sun-interior'}
           position={overview ? [60, 110, 70] : exterior ? [24, 44, 28] : [12, 22, 14]}
-          intensity={currentScene.isNight ? 1.1 : 2.1}
+          intensity={
+            currentScene.isNight
+              ? LOOK_EEVEE
+                ? EEVEE_LOOK.sunNight
+                : 1.1
+              : LOOK_EEVEE
+                ? EEVEE_LOOK.sunDay
+                : 2.1
+          }
           color={currentScene.isNight ? '#CBD5E1' : '#FFFBEB'}
           castShadow
-          shadow-mapSize-width={overview ? 2048 : 1024}
-          shadow-mapSize-height={overview ? 2048 : 1024}
+          shadow-mapSize-width={overview || LOOK_EEVEE ? 2048 : 1024}
+          shadow-mapSize-height={overview || LOOK_EEVEE ? 2048 : 1024}
           shadow-camera-left={overview ? -110 : exterior ? -30 : -18}
           shadow-camera-right={overview ? 110 : exterior ? 30 : 18}
           shadow-camera-top={overview ? 110 : exterior ? 30 : 18}
@@ -168,6 +208,25 @@ export const MotionBlocksComposition: React.FC<{
           shadow-camera-far={overview ? 260 : 120}
           shadow-bias={-0.0004}
         />
+        {LOOK_EEVEE && (
+          <>
+            {/* Cool fill from the camera side — lifts shadow faces. */}
+            <directionalLight
+              position={[-18, 10, 26]}
+              intensity={currentScene.isNight ? EEVEE_LOOK.fillNight : EEVEE_LOOK.fillDay}
+              color="#DBEAFE"
+            />
+            {/* Cool rim from behind — separates characters from the set. */}
+            <directionalLight
+              position={[-10, 18, -30]}
+              intensity={currentScene.isNight ? EEVEE_LOOK.rimNight : EEVEE_LOOK.rimDay}
+              color="#BFDBFE"
+            />
+          </>
+        )}
+
+        {/* Eevee-style look: PMREM environment, ACES tone mapping, bloom. */}
+        <EeveeLook enabled={LOOK_EEVEE} isNight={currentScene.isNight ?? false} />
 
         {/* Active 3D location (town anchor or interior set) */}
         <EnvironmentSwitch
