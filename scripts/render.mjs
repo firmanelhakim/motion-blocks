@@ -131,6 +131,7 @@ async function main() {
       '  node scripts/render.mjs range  --comp <id> --start 0 --end 100 --out-dir <dir> [--pattern frame-{frame}.png] [--port 3050]',
       '  node scripts/render.mjs story [slug|stories/<slug>.py] [--start 0] [--end <last>] [--out out/<slug>.mp4] [--stills-dir out/stills/<slug>] [--audio public/soundtrack.wav|--no-audio] [--port 3051] [--overwrite] [--stills-only] [--assemble-only]',
       '  node scripts/render.mjs preset <name> [--preview] [--port 3050] [--log error]',
+      '  node scripts/render.mjs bundle --out-dir out/bundle-shared',
       '  node scripts/render.mjs list',
       '',
       'Story videos are stills + ffmpeg (30fps, libx264, CRF 18, yuv420p, faststart),',
@@ -176,6 +177,19 @@ async function main() {
       console.error(`Invalid --props JSON: ${flags.props}`);
       process.exit(1);
     }
+  }
+
+  if (cmd === 'bundle') {
+    // Build the Remotion bundle once into a directory other commands can
+    // reuse via --bundle (the bundle-once pattern for parallel shards).
+    // No browser is opened here. The CLI `remotion bundle` cannot be used
+    // for this: remotion.config.ts pulls in an ESM-only module that the
+    // CJS-loaded config cannot parse (pre-existing, 2026-11-26).
+    const outDir = path.resolve(String(flags['out-dir'] || 'out/bundle-shared'));
+    const t0 = Date.now();
+    const abs = await bundleToDir({ outDir, entry: 'src/short-entry.tsx' });
+    console.log(`bundle done: ${abs} (${((Date.now() - t0) / 1000).toFixed(1)}s)`);
+    return;
   }
 
   if (cmd === 'still') {

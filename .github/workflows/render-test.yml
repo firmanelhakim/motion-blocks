@@ -1,0 +1,155 @@
+# GitHub Actions parallel render test — no_friction (1,434 frames, 47.80 s)
+#
+# What it measures: wall-clock time and billed minutes for rendering the
+# no_friction Short in 10 parallel shards on public-repo runners
+# (ubuntu-latest: 4 vCPU / 16 GB), plus whether the stitched result
+# matches the v4 ground truth (fix3/no_friction-v4.mp4, 1,434 frames).
+#
+# How it works:
+#   bundle  — checkout, npm ci, load the no_friction fixture story,
+#             build the Remotion bundle ONCE, upload it as an artifact.
+#   render  — 10 shards in parallel. Each downloads the shared bundle
+#             and renders one frame range to a segment MP4 (video only).
+#   stitch  — downloads the 10 segments, concatenates them with ffmpeg
+#             (no re-encode), muxes the real soundtrack once, and verifies
+#             exactly 1,434 frames / 47.80 s / audio present.
+#
+# Notes:
+# - Shards pass --bundle so they reuse the prebuilt bundle instead of
+#   bundling concurrently (parallel bundling into one dir corrupts it).
+# - There is no GPU on Actions runners: Chromium runs on SwiftShader.
+#   Each shard also pays a cold start (npm ci + Chrome download).
+# - The fixture story/soundtrack live in tests/fixtures/no_friction/.
+#   The loaded story is the regenerated v4 story, not ice_floats.
+# - Artifacts are kept 1 day (segments + bundle) / 7 days (final video).
+name: render-test
+
+on:
+  workflow_dispatch:
+    inputs:
+      story:
+        description: "Story slug to render"
+        required: true
+        default: "no_friction"
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  bundle:
+    name: bundle once
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Load the no_friction fixture story
+        run: cp tests/fixtures/no_friction/currentStory.ts src/story/currentStory.ts
+      - name: Build the shared bundle
+        run: |
+          start=$(date +%s)
+          node scripts/render.mjs bundle --out-dir out/bundle-shared --port 3050
+          echo "bundle_seconds=$(( $(date +%s) - start ))"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bundle-shared
+          path: out/bundle-shared
+          retention-days: 1
+
+  render:
+    name: shard ${{ matrix.shard }} (${{ matrix.start }}-${{ matrix.end }})
+    needs: bundle
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { shard: "01", start: 0, end: 143 }
+          - { shard: "02", start: 144, end: 287 }
+          - { shard: "03", start: 288, end: 431 }
+          - { shard: "04", start: 432, end: 575 }
+          - { shard: "05", start: 576, end: 719 }
+          - { shard: "06", start: 720, end: 863 }
+          - { shard: "07", start: 864, end: 1007 }
+          - { shard: "08", start: 1008, end: 1151 }
+          - { shard: "09", start: 1152, end: 1295 }
+          - { shard: "10", start: 1296, end: 1433 }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Load the no_friction fixture story
+        run: cp tests/fixtures/no_friction/currentStory.ts src/story/currentStory.ts
+      - uses: actions/download-artifact@v4
+        with:
+          name: bundle-shared
+          path: out/bundle-shared
+      - name: Render shard
+        run: |
+          start=$(date +%s)
+          node scripts/render.mjs story ${{ inputs.story }} \
+            --start ${{ matrix.start }} --end ${{ matrix.end }} \
+            --out segment-${{ matrix.shard }}.mp4 \
+            --no-audio --bundle out/bundle-shared --port 3050
+          echo "shard_seconds=$(( $(date +%s) - start ))"
+      - name: Verify segment
+        run: |
+          ffprobe -v error -count_frames \
+            -show_entries stream=nb_read_frames,width,height,r_frame_rate \
+            -show_entries format=duration \
+            -of default=noprint_wrappers=1 segment-${{ matrix.shard }}.mp4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: segment-${{ matrix.shard }}
+          path: segment-${{ matrix.shard }}.mp4
+          retention-days: 1
+
+  stitch:
+    name: stitch + verify
+    needs: render
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: segment-*
+          merge-multiple: true
+          path: segments
+      - name: Concatenate segments and mux the soundtrack
+        run: |
+          ls segments/
+          for i in 01 02 03 04 05 06 07 08 09 10; do echo "file 'segments/segment-$i.mp4'"; done > concat.txt
+          ffmpeg -y -f concat -safe 0 -i concat.txt -c copy video-only.mp4
+          ffmpeg -y -i video-only.mp4 -i tests/fixtures/no_friction/soundtrack.wav \
+            -c:v copy -c:a aac -b:a 192k -shortest no_friction-actions.mp4
+      - name: Verify the stitched video
+        run: |
+          frames=$(ffprobe -v error -count_frames -select_streams v:0 \
+            -show_entries stream=nb_read_frames -of csv=p=0 no_friction-actions.mp4)
+          duration=$(ffprobe -v error -show_entries format=duration \
+            -of csv=p=0 no_friction-actions.mp4)
+          audio=$(ffprobe -v error -select_streams a:0 \
+            -show_entries stream=codec_type -of csv=p=0 no_friction-actions.mp4)
+          echo "frames=$frames duration=$duration audio=$audio"
+          test "$frames" = "1434" || { echo "FAIL: expected 1434 frames, got $frames"; exit 1; }
+          test "$audio" = "audio" || { echo "FAIL: no audio stream"; exit 1; }
+          python3 -c "import sys; d=float('$duration'); sys.exit(0 if abs(d-47.80) < 0.15 else 1)" \
+            || { echo "FAIL: expected duration 47.80s, got $duration"; exit 1; }
+          echo "OK: 1434 frames, 47.80s, audio present"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: no_friction-actions
+          path: no_friction-actions.mp4
+          retention-days: 7
