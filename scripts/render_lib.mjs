@@ -233,7 +233,7 @@ export const STORY_VIDEO = Object.freeze({
  */
 export const STILL_IMAGE_FORMATS = Object.freeze(['png', 'jpeg']);
 
-export function stillsFileName(frame, imageFormat = 'png') {
+export function stillsFileName(frame, imageFormat = 'jpeg') {
   const ext = imageFormat === 'jpeg' ? 'jpg' : 'png';
   return `frame-${String(frame).padStart(5, '0')}.${ext}`;
 }
@@ -309,7 +309,7 @@ export async function assembleStillsToVideo({
   fps = STORY_VIDEO.fps,
   audio = null,
   out,
-  imageFormat = 'png',
+  imageFormat = 'jpeg',
 }) {
   if (!frames || frames < 1) {
     throw new Error('assembleStillsToVideo: frames must be >= 1');
@@ -438,7 +438,7 @@ export function formatFrameName(pattern, frame) {
  * Render multiple stills using a single warm Chromium browser instance.
  * Each item: `{ id, frame, output, inputProps?, skipIfExists? }`.
  *
- * `imageFormat` (`'png'` default, or `'jpeg'`) is passed through to
+ * `imageFormat` (`'jpeg'` default, or `'png'`) is passed through to
  * renderStill; `jpegQuality` (1–100) only applies to JPEG. The resume
  * fingerprint accepts either format (PNG header or JPEG SOF).
  *
@@ -454,7 +454,7 @@ export async function renderStillBatch({
   items,
   opts,
   onDone,
-  imageFormat = 'png',
+  imageFormat = 'jpeg',
   jpegQuality,
 }) {
   const compCache = new Map();

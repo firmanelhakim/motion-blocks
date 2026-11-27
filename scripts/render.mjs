@@ -141,10 +141,10 @@ async function main() {
       'command verifies the loaded title matches stories/<slug>.py before rendering.',
       'A missing soundtrack is an error unless --no-audio is passed.',
       'Stills are skipped when they already exist (resume); pass --overwrite to re-render.',
-      'Stills are lossless PNG by default; --image-format jpeg writes .jpg',
-      'stills instead (default quality 90, --jpeg-quality 1-100) — ~3-5x',
-      'smaller per frame at quality 90 (measured on ice_floats), at a',
-      'small lossy cost the final x264 encode mostly hides. The format',
+      'Stills are JPEG (quality 90) by default; --image-format png writes',
+      'lossless .png stills instead. JPEG is ~3-5x smaller per frame at',
+      'quality 90 (measured on ice_floats; run 6 in CI: 4.3x), at a small',
+      'lossy cost the final x264 encode mostly hides. The format',
       'flows into still filenames, renderStill,',
       'and the ffmpeg assembly glob; --assemble-only infers it from the',
       'stills on disk when the flag is not given.',
@@ -274,10 +274,10 @@ async function main() {
       console.error(`Invalid --end: ${flags.end} (must be an integer >= --start ${start})`);
       process.exit(1);
     }
-    // Still image format for this render. PNG is the lossless default;
-    // --image-format jpeg writes .jpg stills (quality 90 default) for
-    // the disk-saving experiment. `jpg` is accepted as an alias.
-    let imageFormat = String(flags['image-format'] ?? 'png').toLowerCase();
+    // Still image format for this render. JPEG (quality 90) is the
+    // default; --image-format png writes lossless .png stills instead.
+    // `jpg` is accepted as an alias for jpeg.
+    let imageFormat = String(flags['image-format'] ?? 'jpeg').toLowerCase();
     if (imageFormat === 'jpg') imageFormat = 'jpeg';
     if (imageFormat !== 'png' && imageFormat !== 'jpeg') {
       console.error(`Invalid --image-format: ${flags['image-format']} (must be png or jpeg)`);
